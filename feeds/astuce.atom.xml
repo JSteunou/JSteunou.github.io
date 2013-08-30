@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Jérôme Steunou</title><link href="http://www.jeromesteunou.net/" rel="alternate"></link><link href="http://www.jeromesteunou.net/feeds/astuce.atom.xml" rel="self"></link><id>http://www.jeromesteunou.net/</id><updated>2013-07-29T00:00:00+02:00</updated><entry><title>Comment classer ses articles ?</title><link href="http://www.jeromesteunou.net/comment-classer-ses-articles.html" rel="alternate"></link><updated>2013-07-29T00:00:00+02:00</updated><author><name>Jérôme Steunou</name></author><id>tag:www.jeromesteunou.net,2013-07-29:comment-classer-ses-articles.html</id><summary type="html">&lt;p&gt;Simple pense bête que je partage, il pourra sûrement vous servir.&lt;/p&gt;
+&lt;p&gt;Le problème quand on rédige des articles, surtout avec ce genre d'outils, c'est ; comment les classer ? On se retrouve avec des catégories et des tags. Comment ne pas mélanger les deux ? Comment réussir à bien ranger tout le monde dans les bonnes catégories et trouver les bons tags sans que ça ne devienne vite le bordel comme un week-end de grand pont ensoleillé à La Baule.&lt;/p&gt;
+&lt;p&gt;Deux questions :&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Cet article est un ... ? (tuto ? astuce ? simple article ? coup de gueule ? ...)&lt;/li&gt;
+&lt;li&gt;Ça parle de ... ? (libre ? python ? &lt;s&gt;php&lt;/s&gt; troll ? ...)&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Et voilà vous avez votre catégorie et vos tags.&lt;/p&gt;
+&lt;p&gt;Mais de rien.&lt;/p&gt;</summary><category term="blog"></category></entry><entry><title>Héberger son site sur Dropbox</title><link href="http://www.jeromesteunou.net/heberger-son-site-sur-dropbox.html" rel="alternate"></link><updated>2013-06-27T00:00:00+02:00</updated><author><name>Jérôme Steunou</name></author><id>tag:www.jeromesteunou.net,2013-06-27:heberger-son-site-sur-dropbox.html</id><summary type="html">&lt;p&gt;Quand on veut faire un petit site &lt;strong&gt;statique&lt;/strong&gt; tout simple, qu’on n’a pas un gros besoin en bande passante, quoi de mieux que Dropbox pour héberger son site ? Parfaitement !&lt;/p&gt;
+&lt;p&gt;L’offre gratuite est suffisante, 2Go, et on peut gagner quelques Go supplémentaires via le parrainage. Pas besoin de payer pour un espace trop petit ou au contraire illimité qu’on ne remplira jamais. La synchro entre le répertoire local et l’espace de stockage distant est efficace et rapide, pas besoin de payer et pourtant d’être obligé de lancer un client FTP. Et &lt;strong&gt;surtout&lt;/strong&gt; il existe un client pour linux, et il est très bien intégré à Nautilus. Ça tombe bien, je suis sous Debian et j'utilise Gnome 3.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="http://db.tt/NS3rtUXL"&gt;créer&lt;/a&gt; un compte dropbox&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.dropbox.com/enable_public_folder"&gt;activer&lt;/a&gt; le dossier public&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.dropbox.com/install"&gt;installer&lt;/a&gt; le logiciel sur son pc&lt;/li&gt;
+&lt;li&gt;copier son site dans le dossier public&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://www.jeromesteunou.net/static/images/dropbox_public_link.png"&gt;récupérer&lt;/a&gt; l’adresse public du fichier index&lt;/li&gt;
+&lt;li&gt;le coller dans un navigateur pour tester, et tadaaaa&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Si vous utiliser des feuilles de style CSS et / ou des fichiers de scripts JS vous pouvez utiliser des URL relatives, ça fonctionne très bien. Ensuite, vous pouvez très bien acheter un nom de domain, chez &lt;a href="https://www.gandi.net/"&gt;Gandi&lt;/a&gt; par exemple, et le lier à votre répertoire public dropbox.&lt;/p&gt;
+&lt;p&gt;Et voilà :)&lt;/p&gt;</summary><category term="hosting"></category><category term="blog"></category></entry></feed>
