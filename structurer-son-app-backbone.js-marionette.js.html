@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <title>Structurer son application Backbone.js / Marionette.js (part. 1)</title>
+    
+            
+    <link rel="stylesheet" href="./theme/css/main.css">
+    <!--[if IE]>
+        <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    
+    <header>
+        <h1><a href="./">Jérôme Steunou</a></h1>
+                        <h2><a href="./pages/about.html">I code, I manage, I play music, I'm curious.</a></h2>
+                    </header>
+    
+
+    <section>
+              <article>
+    <h1>
+      <a href="./structurer-son-app-backbone.js-marionette.js.html" rel="bookmark"
+        title="Permalink to Structurer son application Backbone.js / Marionette.js (part. 1)">Structurer son application Backbone.js / Marionette.js (part. 1)</a>
+    </h1>
+    
+    
+    <footer>
+      <p class="date">dim. 21 juillet 2013</p>
+          <p class="category"><a href="./category/tuto.html"><i class="icon-folder-close">&nbsp;</i>tuto</a></p>
+              <ul class="tags-list"><li><a href="./tag/javascript.html"><i class="icon-tag">&nbsp;</i>javascript</a></li><li><a href="./tag/backbonejs.html"><i class="icon-tag">&nbsp;</i>backbone.js</a></li><li><a href="./tag/marionettejs.html"><i class="icon-tag">&nbsp;</i>marionette.js</a></li></ul>
+        </footer>
+    
+    <section class="post-content">
+        
+            <h2>Comment bien commencer avec Backbone.js / Marionette.js ?</h2>
+<p>Je vais passer le pourquoi du comment Backbone.js et Marionette.js, qui est pour moi un couple JS qui fonctionne très très bien pour le dev côté front-end. Si vous êtes arrivé ici, je considère que vous en connaissez un minimum sur ces <abbr title="Framework">FW</abbr>, au moins les concepts de <code>Model Collection View Router</code> propres à Backbone.js.</p>
+<p>Le but de cet article est de vous montrer ce que j'utilise comme structure pour débuter une application avec Marionette.js. Ça vous aidera sûrement pour débuter avec ce framework, bien que la <a href="https://github.com/marionettejs/backbone.marionette/tree/master/docs">doc officielle</a> soit déjà pas mal foutue.</p>
+<h2>Faut-il utiliser Require.js ?</h2>
+<p>La grande question quand on commence à vouloir structurer son application JavaScript et qu'on veut bien faire, comprendre, comme dans la plupart des tutos bien balèzes. Je suis passé par là, j'ai testé, et finalement j'ai tout pété. <a href="http://en.wikipedia.org/wiki/KISS_principle">Pourquoi faire compliqué quand on peut faire simple</a>.</p>
+<p>Donc, non vous n'êtes pas obligé : pour une application vraiment grande (mais vraiment hein), vous pouvez commencer à en ressentir le besoin. Un peu comme Gmail qui vous charge d'abord le module pour les mails, puis les contacts, le chat, etc. Mais sur une application Marionette, avec les librairies quivontbien, les classiques jQuery(UI) + 3, 4 librairies JS histoire ne pas ré-inventer la roue, quand vous aurez tout assemblé et minifié, vous n'aurez plus qu'un fichier JS et quelques libs chargées via CDN dans 90% des cas. Donc dans 90% des cas Require.js est inutile.</p>
+<p>De plus Marionette utilise deux concepts pour vous aider à structurer votre code et instancier l'ensemble : l'<a href="https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.application.md">application</a> et les <a href="https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.application.module.md">modules</a>. Si vous avez fait un peu de Django par exemple, ça vous ne sera pas étranger. L'application sera votre bootstrap, votre chef d'orchestre, alors que vos modules seront en fait vos mini-applications. Donc d'emblée, Marionette vous pousse au <strong>découpage</strong> et <strong>découplage</strong>, bien !</p>
+<h2>L'objet Marionette.Application</h2>
+<p>Regardons ensemble ce que nous pouvons faire avec :</p>
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">myApp</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Marionette</span><span class="p">.</span><span class="nx">Application</span><span class="p">();</span>
+</pre></div>
+
+
+<p>L'instancier... euh ok</p>
+<div class="highlight"><pre><span class="nx">myApp</span><span class="p">.</span><span class="nx">addInitializer</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">){</span>
+  <span class="c1">// do useful stuff here</span>
+  <span class="kd">var</span> <span class="nx">myView</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MyView</span><span class="p">({</span>
+    <span class="nx">model</span><span class="o">:</span> <span class="nx">options</span><span class="p">.</span><span class="nx">someModel</span>
+  <span class="p">});</span>
+  <span class="nx">myApp</span><span class="p">.</span><span class="nx">mainRegion</span><span class="p">.</span><span class="nx">show</span><span class="p">(</span><span class="nx">myView</span><span class="p">);</span>
+<span class="p">});</span>
+
+<span class="nx">myApp</span><span class="p">.</span><span class="nx">addInitializer</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">){</span>
+  <span class="k">new</span> <span class="nx">MyAppRouter</span><span class="p">();</span>
+  <span class="nx">Backbone</span><span class="p">.</span><span class="nx">history</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
+<span class="p">});</span>
+</pre></div>
+
+
+<p>Ajouter des <code>initializer</code>... aaah pas mal. C'est simple, mais efficace. Quand votre application démarre, elle appelle les initializer, et dans l'ordre d'ajout s'il vous plaît. Si vous avez des outils, contrôleur, routeur, etc, à initialiser quand l'application se lance, c'est ici, tout simplement.</p>
+<p><em>Et comment lance-t-on l'application ? Et les <code>options</code> que je vois dans tes callbacks elles sortent d'où ?</em></p>
+<p>Taratataaa, rien de plus simple</p>
+<div class="highlight"><pre><span class="nx">MyApp</span><span class="p">.</span><span class="nx">start</span><span class="p">({</span><span class="nx">foo</span><span class="o">:</span><span class="s2">&quot;bar&quot;</span><span class="p">})</span>
+</pre></div>
+
+
+<p>Et pour les cas vraiment complexes où vous auriez un bootstrap par dessus ce bootstrap, vous pouvez même modifier les options juste avant les <code>initializer</code> ou lancer des actions. </p>
+<div class="highlight"><pre><span class="nx">MyApp</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;initialize:before&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">){</span>
+  <span class="nx">options</span><span class="p">.</span><span class="nx">moreData</span> <span class="o">=</span> <span class="s2">&quot;Yo dawg, I heard you like options so I put some options in your options!&quot;</span><span class="p">;</span>
+<span class="p">});</span>
+</pre></div>
+
+
+<p>Vous remarquerez la méthode <code>on()</code> qui sert à inscrire une callback à un événement donné. Vous retrouvez ce principe dans Backbone.js et Marionette.js, ainsi que son <em>inverse</em> <a href="http://backbonejs.org/#Events-listenTo"><code>listenTo()</code></a> qui sera souvent plus approprié dans une vue.</p>
+<p>Vous avez accès à trois d'événements depuis l'application :</p>
+<ul>
+<li><code>initialize:before</code> / <code>onInitializeBefore</code> : levé juste avant que les initializers soient lancé</li>
+<li><code>initialize:after</code> / <code>onInitializeAfter</code> : levé juste après la fin initializers</li>
+<li><code>start</code> / <code>onStart</code> : au vrai début de l'application, donc après les initializers, et les événements des initializers.</li>
+</ul>
+<h2>Non aux variables globales</h2>
+<p>Avant de passer à la suite, récapitulons ce que donne notre application, encapsulé dans une <a href="http://en.wikipedia.org/wiki/Immediately-invoked_function_expression">IIFE</a> et ajoutée dans un namespace qui sera notre <strong>seule</strong> variable globale.</p>
+<div class="highlight"><pre><span class="nx">MyNamespace</span><span class="p">.</span><span class="nx">myApp</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">Backbone</span><span class="p">,</span> <span class="nx">Marionette</span><span class="p">,</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">$</span><span class="p">,</span> <span class="nx">Handlebars</span><span class="p">,</span> <span class="nx">etc</span><span class="p">)</span> <span class="p">{</span>
+  <span class="kd">var</span> <span class="nx">myApp</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Backbone</span><span class="p">.</span><span class="nx">Marionette</span><span class="p">.</span><span class="nx">Application</span><span class="p">();</span>
+
+  <span class="nx">myApp</span><span class="p">.</span><span class="nx">addInitializer</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">){</span>
+    <span class="c1">// do useful stuff here</span>
+    <span class="c1">// like maybe configure Handlebars</span>
+    <span class="p">...</span>
+  <span class="p">});</span>
+
+  <span class="nx">MyApp</span><span class="p">.</span><span class="nx">addInitializer</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">){</span>
+    <span class="c1">// inside an initializer `this` is the app</span>
+    <span class="k">this</span><span class="p">.</span><span class="nx">router</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MyNamespace</span><span class="p">.</span><span class="nx">Router</span><span class="p">();</span>
+    <span class="nx">Backbone</span><span class="p">.</span><span class="nx">history</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
+  <span class="p">});</span>
+
+  <span class="k">return</span> <span class="nx">myApp</span><span class="p">;</span>
+
+<span class="p">}(</span><span class="nx">Backbone</span><span class="p">,</span> <span class="nx">Marionette</span><span class="p">,</span> <span class="nx">_</span><span class="p">,</span> <span class="nx">$</span><span class="p">,</span> <span class="nx">Handlebars</span><span class="p">,</span> <span class="nx">etc</span><span class="p">);</span>
+
+<span class="nx">MyNamespace</span><span class="p">.</span><span class="nx">myApp</span><span class="p">.</span><span class="nx">start</span><span class="p">(</span><span class="nx">someOptions</span><span class="p">);</span>
+</pre></div>
+
+
+<p>Ça sera tout pour cette partie. Je vais découper le tuto en 3 ou 4 partie vu le temps que ça me prend.</p>
+          </section>
+      
+  </article>
+
+    </section>
+
+
+    <aside>
+    </aside>
+    
+    <footer>
+        <nav></nav>
+    </footer>
+
+</body>
+</html>

@@ -1,0 +1,162 @@
+/* Imports */
+@import url('http://fonts.googleapis.com/css?family=Asap&subset=latin');
+@import url("normalize.css");
+@import url("font-awesome.min.css");
+@import url("pygment.css");
+
+
+/*****************
+ *   global
+ *****************/
+
+body {
+    background-color: #FEFEFE;
+    color: #433;
+    /*font-family: "Karla", "Ubuntu", "Calibri", "Verdana", sans-serif;*/
+    font-family: "Asap", "Ubuntu", "Calibri", "Verdana", sans-serif;
+    font-size: 19px;
+    line-height: 28px;
+    margin: 0;
+    padding: 20px 0;
+}
+
+a {
+  color: #655;
+}
+a:hover {
+    color: #225555;
+}
+
+h1 {
+    font-size: 27px;
+}
+h2 {
+    font-size: 23px;
+}
+h3 {
+    font-size: 20px;
+}
+h1 a, h2 a, h3 a {
+    color: #433;
+    text-decoration: none;
+}
+
+code {
+    background-color: #F7F7F9;
+    border: 1px solid #E1E1E8;
+    /*color: #DD1144;*/
+    padding: 2px 4px;
+}
+pre code {
+    border: none;
+    background-color: inherit;
+}
+code, pre {
+    border-radius: 3px 3px 3px 3px;
+    color: #333333;
+    font-family: 'Consolas','Menlo','Deja Vu Sans Mono','Bitstream Vera Sans Mono',monospace;
+    font-size: 16px;
+    line-height: 20px;
+    padding: 0 3px 2px;
+    white-space: pre-wrap;
+}
+
+blockquote {
+    margin-left: 0;
+}
+blockquote,
+blockquote > i[class^="icon-"] {
+    font-style: italic;
+}
+blockquote > p {
+    margin-left: 70px;
+}
+
+
+/*****************
+ *     index
+ *****************/
+article + article {
+    margin-top: 40px;
+}
+
+
+/*****************
+ *     page
+ *****************/
+
+body > section,
+body > header > h1,
+body > header > h2 {
+    max-width: 960px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+/*****************
+ *   header
+ *****************/
+
+body > header {
+    border-bottom: 1px solid #DDD;
+    text-align: right;
+}
+body > header > h1 {
+    text-transform: uppercase;
+}
+body > header > h2 a {
+    color: #AAA;
+}
+body > header > h2 a:hover {
+    color: #333;
+}
+
+
+/*****************
+ *   footer
+ *****************/
+
+body > footer {
+    border-top: 1px solid #DDD;
+}
+
+
+
+/*****************
+ *   articles
+ *****************/
+
+article > h1:first-child,
+article > h2:first-child {
+    margin-bottom: 0;
+}
+
+article > section.post-content {
+    display: inline-block;
+    width: 78%;
+}
+
+article > footer {
+    display: inline-block;
+    vertical-align: top;
+    width: 20%;
+    margin-top: 0;
+    font-style: italic;
+    color: #AAA;
+}
+
+article > footer > .category,
+article > footer > .tags-list {
+    font-size: 0.8em;
+    line-height: 0.8em;
+}
+article > footer > .category a,
+article > footer > .tags-list a {
+    text-decoration: none;
+}
+article > footer > ul.tags-list {
+    list-style: none;
+    padding-left: 0;
+}
+
