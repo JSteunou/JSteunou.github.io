@@ -58,21 +58,23 @@
 <span class="p">});</span>
 
 <span class="nx">myApp</span><span class="p">.</span><span class="nx">addInitializer</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">){</span>
-  <span class="k">new</span> <span class="nx">MyAppRouter</span><span class="p">();</span>
+  <span class="k">new</span> <span class="nx">myAppRouter</span><span class="p">();</span>
   <span class="nx">Backbone</span><span class="p">.</span><span class="nx">history</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
 <span class="p">});</span>
 </pre></div>
 
 
 <p>Ajouter des <code>initializer</code>... aaah pas mal. C'est simple, mais efficace. Quand votre application démarre, elle appelle les initializer, et dans l'ordre d'ajout s'il vous plaît. Si vous avez des outils, contrôleur, routeur, etc, à initialiser quand l'application se lance, c'est ici, tout simplement.</p>
-<p><em>Et comment lance-t-on l'application ? Et les <code>options</code> que je vois dans tes callbacks elles sortent d'où ?</em></p>
+<blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
+<p>Et comment lance-t-on l'application ? Et les <code>options</code> que je vois dans tes callbacks elles sortent d'où ?</p>
+</blockquote>
 <p>Taratataaa, rien de plus simple</p>
-<div class="highlight"><pre><span class="nx">MyApp</span><span class="p">.</span><span class="nx">start</span><span class="p">({</span><span class="nx">foo</span><span class="o">:</span><span class="s2">&quot;bar&quot;</span><span class="p">})</span>
+<div class="highlight"><pre><span class="nx">myApp</span><span class="p">.</span><span class="nx">start</span><span class="p">({</span><span class="nx">foo</span><span class="o">:</span><span class="s2">&quot;bar&quot;</span><span class="p">})</span>
 </pre></div>
 
 
 <p>Et pour les cas vraiment complexes où vous auriez un bootstrap par dessus ce bootstrap, vous pouvez même modifier les options juste avant les <code>initializer</code> ou lancer des actions. </p>
-<div class="highlight"><pre><span class="nx">MyApp</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;initialize:before&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">){</span>
+<div class="highlight"><pre><span class="nx">myApp</span><span class="p">.</span><span class="nx">on</span><span class="p">(</span><span class="s2">&quot;initialize:before&quot;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">){</span>
   <span class="nx">options</span><span class="p">.</span><span class="nx">moreData</span> <span class="o">=</span> <span class="s2">&quot;Yo dawg, I heard you like options so I put some options in your options!&quot;</span><span class="p">;</span>
 <span class="p">});</span>
 </pre></div>
@@ -96,7 +98,7 @@
     <span class="p">...</span>
   <span class="p">});</span>
 
-  <span class="nx">MyApp</span><span class="p">.</span><span class="nx">addInitializer</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">){</span>
+  <span class="nx">myApp</span><span class="p">.</span><span class="nx">addInitializer</span><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">options</span><span class="p">){</span>
     <span class="c1">// inside an initializer `this` is the app</span>
     <span class="k">this</span><span class="p">.</span><span class="nx">router</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">MyNamespace</span><span class="p">.</span><span class="nx">Router</span><span class="p">();</span>
     <span class="nx">Backbone</span><span class="p">.</span><span class="nx">history</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
