@@ -29,9 +29,7 @@
 
 
 &lt;p&gt;Ajouter des &lt;code&gt;initializer&lt;/code&gt;... aaah pas mal. C'est simple, mais efficace. Quand votre application démarre, elle appelle les initializer, et dans l'ordre d'ajout s'il vous plaît. Si vous avez des outils, contrôleur, routeur, etc, à initialiser quand l'application se lance, c'est ici, tout simplement.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Et comment lance-t-on l'application ? Et les &lt;code&gt;options&lt;/code&gt; que je vois dans tes callbacks elles sortent d'où ?&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p&gt;&lt;em&gt;Et comment lance-t-on l'application ? Et les &lt;code&gt;options&lt;/code&gt; que je vois dans tes callbacks elles sortent d'où ?&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;Taratataaa, rien de plus simple&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nx"&gt;MyApp&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;start&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="nx"&gt;foo&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;bar&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
