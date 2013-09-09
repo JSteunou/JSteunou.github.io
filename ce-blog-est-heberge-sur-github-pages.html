@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="utf-8" />
+    <title>Ce blog est hébergé sur Github Pages</title>
+    
+        <link href="http://www.jeromesteunou.net/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Jérôme Steunou Full Atom Feed" />
+            
+    <link rel="stylesheet" href="http://www.jeromesteunou.net/theme/css/main.css">
+    <!--[if IE]>
+        <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    
+    <header>
+        <h1><a href="http://www.jeromesteunou.net/">Jérôme Steunou</a></h1>
+                        <h2><a href="http://www.jeromesteunou.net/pages/about.html">I code, I manage, I play music, I'm curious.</a></h2>
+                    </header>
+    
+
+    <section>
+              <article>
+    <h1>
+      <a href="http://www.jeromesteunou.net/ce-blog-est-heberge-sur-github-pages.html" rel="bookmark"
+        title="Permalink to Ce blog est hébergé sur Github Pages">Ce blog est hébergé sur Github Pages</a>
+    </h1>
+    
+    
+    <footer>
+      <p class="date">lun. 09 septembre 2013</p>
+          <p class="category"><a href="http://www.jeromesteunou.net/category/article.html"><i class="icon-folder-close">&nbsp;</i>article</a></p>
+              <ul class="tags-list"><li><a href="http://www.jeromesteunou.net/tag/hosting.html"><i class="icon-tag">&nbsp;</i>hosting</a></li><li><a href="http://www.jeromesteunou.net/tag/blog.html"><i class="icon-tag">&nbsp;</i>blog</a></li></ul>
+        </footer>
+    
+    <section class="post-content">
+        
+            <p>Quand je me suis lancé avec ce blog, j'avais été inspiré par un article de <a href="https://nicolas.perriault.net/code/2012/dead-easy-yet-powerful-static-website-generator-with-flask/">Nicolas Perriault</a> et comme je connais bien Flask j'étais parti dans l'idée de faire à peu près la même chose, et d'héberger la version static du blog sur <a href="/heberger-son-site-sur-dropbox.html">Dropbox, avec dossier public toussa toussa</a>. J'avais une première version un peu bancale mais ça pouvait marcher. Bizarrement j'avais complètement zappé le système <a href="http://pages.github.com/">Github Pages</a> et Jekyll (ou même <a href="http://octopress.org/">Octopress</a>). Un jour je suis retombé dessus, ça m'a rappelé <a href="https://github.com/getpelican/pelican">Pelican</a>, le pendant pythonique de Jekyll, créé par <a href="http://blog.notmyidea.org">Alexis Métaireau</a> et <em>paf</em> ça a fait des Chocapics.</p>
+<p>En lisant la doc je me suis rendu compte que Pelican avait vraiment bien évolué par rapport à ses premières versions et qu'il couvrait presque toutes les fonctionnalités dont j'avais besoin. Du coup j'ai joué avec. En une journée j'ai basculé mes articles sous Pelican en local pour tester et surtout j'ai découvert le make file fournit de base qui permet pas mal de chose, dont publier le résultat sur <a href="https://github.com/JSteunou/JSteunou.github.io">Github Pages</a>.</p>
+<p>Ça a été comme une révélation. L'import de font Google Fonts en CSS qui ne marchaient pas via Dropbox fonctionnait ici, et surtout, le service est fait pour que vous puissiez mettre votre nom de domaine. Finit la redirection crado qui ne doit pas aider au référencement. La conclusion s'imposait d'elle même. Avec un seul outil de gestion de version je pouvais héberger et gérer mes sources pour ce blog, son thème et sa publication, et surtout avec des outils qui sont fait pour.</p>
+<blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
+<p>The right tool for the right job.</p>
+</blockquote>
+          </section>
+      
+  </article>
+
+    
+    <div ng-app="comimoc" ng-controller="CommentCtrl" ng-include="'http://www.jeromesteunou.net/theme/views/comimoc.html'"></div>
+    </section>
+
+
+    <aside>
+    </aside>
+    
+    <footer>
+        <p>
+                        <a href="https://github.com/getpelican/pelican" title="Made with Pelican"><i class="icon-github">&nbsp;</i>Made with Pelican</a>
+                        <a href="http://www.jeromesteunou.net/pages/about.html" title="About"><i class="icon-plus">&nbsp;</i>About</a>
+                        <a href="http://fr.viadeo.com/fr/profile/jerome.steunou" title="Viadeo"><i class="icon-circle-blank">&nbsp;</i>Viadeo</a>
+                        <a href="http://www.jeromesteunou.net/None" title="Feed"><i class="icon-rss">&nbsp;</i>Feed</a>
+                        <a href="mailto:contact@jeromesteunou.net" title="Email"><i class="icon-envelope-alt">&nbsp;</i>Email</a>
+                    </p>
+                <p class="footer_line">Copyright © 2013 Jérôme Steunou.</p>
+            </footer>
+    
+    
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular-resource.min.js"></script>
+    
+    <script>
+        angular.module('comimoc', ['ngResource'])
+            .constant('COMIMOC_CONFIG', {
+                'RESOURCES_LOCATION':   'http://comimoc.herokuapp.com',
+                'WEBSITE':              'jeromesteunou.net',
+                'HASH':                 false,
+                'ARGS':                 false,
+                'LOCALE':               'fr',
+                });
+    </script>
+    
+    <script src="http://www.jeromesteunou.net/theme/js/comimoc.js"></script>
+    
+</body>
+</html>
