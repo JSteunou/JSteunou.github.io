@@ -42,6 +42,8 @@
       
   </article>
 
+    
+    <div ng-app="comimoc" ng-controller="CommentCtrl" ng-include="'http://www.jeromesteunou.net/theme/views/comimoc.html'"></div>
     </section>
 
 
@@ -58,6 +60,23 @@
                     </p>
                 <p class="footer_line">Copyright © 2013 Jérôme Steunou.</p>
             </footer>
-
+    
+    
+        <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular-resource.min.js"></script>
+    
+    <script>
+        angular.module('comimoc', ['ngResource'])
+            .constant('COMIMOC_CONFIG', {
+                'RESOURCES_LOCATION':   'http://comimoc.herokuapp.com',
+                'WEBSITE':              'jeromesteunou.net',
+                'HASH':                 false,
+                'ARGS':                 false,
+                'LOCALE':               'fr',
+                });
+    </script>
+    
+    <script src="http://www.jeromesteunou.net/theme/js/comimoc.js"></script>
+    
 </body>
 </html>
