@@ -29,12 +29,12 @@
       <section>
         
             <h2>Why the Comimoc Project?</h2>
-<p>The goal of this project is to provide a simple system to handle comments for static blogs like this one, because I did not want to use Disqus and I could not find alternative for Pelican. When I started it I had those criteria in mind:</p>
+<p>Comimoc stands for <strong>COM</strong>ents <strong>I</strong>n <strong>M</strong>y <strong>O</strong>wn <strong>C</strong>loud. The goal of this project is to provide a simple system to handle comments for static blogs like this one, because I did not want to use Disqus and I could not find an alternative for Pelican. When I started it I had those criteria in mind:</p>
 <ul>
-<li>Front-end separate from back-end. So it can be added easily with some JavaScript everywhere.</li>
+<li>Front-end separated from back-end. So it can be added easily with some JavaScript everywhere and the resources for the back-end mutualized.</li>
 <li>Back-end very light, so it can be hosted on PaaS plateform if needed.</li>
 </ul>
-<p>Also I would like to start playing with AngularJS for real, and I know how to use Flask and MongoDB. The advantage with this stack and separation is that if some people do not like AngularJS or just write is own, he can. Same for the back-end.</p>
+<p>Also I would like to start playing with AngularJS for real and I know how to use Flask and MongoDB. So I made that choice and I did not need anything else. Nice. Plus, the advantage with this stack and separation is that if some people do not like AngularJS or just want to write his own front-end, he can. Same with the back-end.</p>
 <h2>Sounds sweet but show me some stuff!</h2>
 <p>Fine. All comments for this blog are handled by Comimoc and hosted thanks to <a href="http://heroku.com">Heroku</a>. I also <a href="http://www.jeromesteunou.net/publication-of-this-blog-theme-pelican-jst.html">published the theme</a> I made for Pelican with an integration of Comimoc.</p>
 <p>Comimoc itself is on Github, both <a href="https://github.com/JSteunou/comimoc-front-angularjs">front</a> and <a href="https://github.com/JSteunou/comimoc-back">back</a>. The Comimoc back-end is also avalaible on <a href="https://pypi.python.org/pypi/comimoc">Pypi</a> so you can just <code>pip install comimoc</code> and start using it just like that!</p>
@@ -57,9 +57,9 @@
     <span class="s">&quot;SECRET_KEY&quot;</span><span class="p">:</span> <span class="s">&quot;my secret key ;)&quot;</span><span class="p">,</span>
     <span class="s">&quot;MONGODB_SETTINGS&quot;</span><span class="p">:</span> <span class="p">{</span>
         <span class="s">&quot;HOST&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&quot;MONGOLAB_URI&quot;</span><span class="p">],</span>
-        <span class="s">&quot;DB&quot;</span><span class="p">:</span> <span class="s">&quot;test&quot;</span> <span class="c"># flask mongoengine bug it wont use DB, but crashes with HOST alone</span>
+        <span class="s">&quot;DB&quot;</span><span class="p">:</span> <span class="s">&quot;test&quot;</span> <span class="c"># flask mongoengine current bug: it wont use DB, but crashes with HOST alone</span>
         <span class="p">},</span>
-    <span class="s">&quot;CORS_ALLOW_ORIGIN_WHITELIST&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">jeromesteunou</span><span class="o">.</span><span class="n">net</span><span class="s">&#39;, &#39;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">jeromesteunou</span><span class="o">.</span><span class="n">net</span><span class="s">&#39;)</span>
+    <span class="s">&quot;CORS_ALLOW_ORIGIN_WHITELIST&quot;</span><span class="p">:</span> <span class="p">(</span><span class="s">&#39;http://jeromesteunou.net&#39;</span><span class="p">,</span> <span class="s">&#39;http://www.jeromesteunou.net&#39;</span><span class="p">)</span>
 <span class="p">}</span>
 <span class="n">flask_app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
 </pre></div>
@@ -70,9 +70,65 @@
 </pre></div>
 
 
-<p><strong>BOUM</strong> as easy as a pie!</p>
+<p><strong>BOUM</strong> as easy as pie!</p>
 <h2>API description</h2>
-<p><em>MORE TO COME</em></p>
+<p>For the developpers that want to develop their own front-end on top of Comimoc back-end, here is the technical documention.</p>
+<h3>Document <em>comment</em></h3>
+<div class="highlight"><pre><span class="p">{</span>
+    <span class="nx">_id</span><span class="o">:</span> <span class="nx">ObjectId</span><span class="p">,</span>
+    <span class="nx">website</span><span class="o">:</span> <span class="nb">String</span><span class="p">,</span>
+    <span class="nx">page</span><span class="o">:</span> <span class="nb">String</span><span class="p">,</span>
+    <span class="nx">author_email</span><span class="o">:</span> <span class="nb">String</span><span class="p">,</span>
+    <span class="nx">author_name</span><span class="o">:</span> <span class="nb">String</span><span class="p">,</span>
+    <span class="nx">author_website</span><span class="o">:</span> <span class="nb">String</span><span class="p">,</span>
+    <span class="nx">content</span><span class="o">:</span> <span class="nb">String</span><span class="p">,</span>
+    <span class="nx">when</span><span class="o">:</span> <span class="nx">ISODate</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h3>HTTP <em>/comments</em></h3>
+<p><em>GET /comments?website=string&amp;page=string</em> return a list of comments matching the couple website/page in an object. (See the <a href="http://flask.pocoo.org/docs/security/#json-security">security reason</a>).</p>
+<div class="highlight"><pre><span class="p">{</span>
+    <span class="nx">comments</span><span class="o">:</span> <span class="p">[</span>
+        <span class="p">{</span>
+            <span class="nx">id</span><span class="o">:</span> <span class="nb">String</span><span class="p">,</span>
+            <span class="nx">website</span><span class="o">:</span> <span class="nb">String</span><span class="p">,</span>
+            <span class="nx">page</span><span class="o">:</span> <span class="nb">String</span><span class="p">,</span>
+            <span class="nx">author_email</span><span class="o">:</span> <span class="nb">String</span><span class="p">,</span>   <span class="c1">// hash gravatar compatible</span>
+            <span class="nx">author_name</span><span class="o">:</span> <span class="nb">String</span><span class="p">,</span>
+            <span class="nx">author_website</span><span class="o">:</span> <span class="nb">String</span> <span class="nx">or</span> <span class="kc">null</span><span class="p">,</span>
+            <span class="nx">content</span><span class="o">:</span> <span class="nb">String</span><span class="p">,</span>
+            <span class="nx">when</span><span class="o">:</span> <span class="nb">String</span>            <span class="c1">// datetime in RFC 822 see http://tools.ietf.org/html/rfc822.html</span>
+        <span class="p">},</span>
+        <span class="p">{</span>
+            <span class="p">...</span>
+        <span class="p">},</span>
+        <span class="p">...</span>
+    <span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<p><em>POST /comments</em> add a new comment for the couple website/page. On success return a 201 with the saved comment in the same format the <em>GET</em> request.</p>
+<div class="highlight"><pre><span class="p">{</span>
+    <span class="nx">website</span><span class="o">:</span> <span class="nb">String</span><span class="p">,</span>        <span class="c1">// mandatory</span>
+    <span class="nx">page</span><span class="o">:</span> <span class="nb">String</span><span class="p">,</span>           <span class="c1">// mandatory</span>
+    <span class="nx">author_email</span><span class="o">:</span> <span class="nb">String</span><span class="p">,</span>   <span class="c1">// mandatory and email format</span>
+    <span class="nx">author_name</span><span class="o">:</span> <span class="nb">String</span><span class="p">,</span>    <span class="c1">// mandatory</span>
+    <span class="nx">author_website</span><span class="o">:</span> <span class="nb">String</span><span class="p">,</span> <span class="c1">// not mandatory</span>
+    <span class="nx">content</span><span class="o">:</span> <span class="nb">String</span>         <span class="c1">// mandatory</span>
+<span class="p">}</span>
+</pre></div>
+
+
+<h2>Source code</h2>
+<ul>
+<li><a href="https://github.com/JSteunou/comimoc-back">Comimoc Back</a></li>
+<li><a href="https://github.com/JSteunou/comimoc-front-angularjs">Comimoc Front AngularJS</a></li>
+<li><a href="https://github.com/JSteunou/pelican-jst">Pelican-JST</a></li>
+</ul>
+<p>All of these are BSD Licensed.</p>
           </section>
       
   </article>
@@ -91,6 +147,7 @@
     <footer>
         <p>
                         <a href="https://github.com/getpelican/pelican" title="Made with Pelican"><i class="icon-github">&nbsp;</i>Made with Pelican</a>
+                        <a href="http://www.jeromesteunou.net/pages/comimoc.html" title="Comimoc project"><i class="icon-comments">&nbsp;</i>Comimoc project</a>
                         <a href="http://www.jeromesteunou.net/pages/about.html" title="About"><i class="icon-plus">&nbsp;</i>About</a>
                         <a href="http://fr.viadeo.com/fr/profile/jerome.steunou" title="Viadeo"><i class="icon-circle-blank">&nbsp;</i>Viadeo</a>
                         <a href="http://www.jeromesteunou.net/None" title="Feed"><i class="icon-rss">&nbsp;</i>Feed</a>
