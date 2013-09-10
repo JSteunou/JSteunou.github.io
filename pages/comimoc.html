@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Comimoc Project</title>
+    
+        <link href="http://www.jeromesteunou.net/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Jérôme Steunou Full Atom Feed" />
+            
+    <link rel="stylesheet" href="http://www.jeromesteunou.net/theme/css/main.css">
+    <!--[if IE]>
+        <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    
+    <header>
+        <h1><a href="http://www.jeromesteunou.net/">Jérôme Steunou</a></h1>
+                        <h2><a href="http://www.jeromesteunou.net/pages/about.html">I code, I manage, I play music, I'm curious.</a></h2>
+                    </header>
+    
+
+    <section>
+              <article>
+    <h1>
+      <a href="http://www.jeromesteunou.net/pages/comimoc.html" rel="bookmark"
+        title="Permalink to Comimoc Project">Comimoc Project</a>
+    </h1>
+    
+      <section>
+        
+            <h2>Why the Comimoc Project?</h2>
+<p>The goal of this project is to provide a simple system to handle comments for static blogs like this one, because I did not want to use Disqus and I could not find alternative for Pelican. When I started it I had those criteria in mind:</p>
+<ul>
+<li>Front-end separate from back-end. So it can be added easily with some JavaScript everywhere.</li>
+<li>Back-end very light, so it can be hosted on PaaS plateform if needed.</li>
+</ul>
+<p>Also I would like to start playing with AngularJS for real, and I know how to use Flask and MongoDB. The advantage with this stack and separation is that if some people do not like AngularJS or just write is own, he can. Same for the back-end.</p>
+<h2>Sounds sweet but show me some stuff!</h2>
+<p>Fine. All comments for this blog are handled by Comimoc and hosted thanks to <a href="http://heroku.com">Heroku</a>. I also <a href="http://www.jeromesteunou.net/publication-of-this-blog-theme-pelican-jst.html">published the theme</a> I made for Pelican with an integration of Comimoc.</p>
+<p>Comimoc itself is on Github, both <a href="https://github.com/JSteunou/comimoc-front-angularjs">front</a> and <a href="https://github.com/JSteunou/comimoc-back">back</a>. The Comimoc back-end is also avalaible on <a href="https://pypi.python.org/pypi/comimoc">Pypi</a> so you can just <code>pip install comimoc</code> and start using it just like that!</p>
+<p>Example for Heroku and MongoLab addon:</p>
+<p>3 files:</p>
+<p>1) <em>requirements.txt</em></p>
+<div class="highlight"><pre><span class="n">gunicorn</span>
+<span class="n">comimoc</span>
+</pre></div>
+
+
+<p>2) <em>mycomimoc.py</em></p>
+<div class="highlight"><pre><span class="c"># -*- coding: utf-8 -*-</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+
+<span class="kn">from</span> <span class="nn">comimoc</span> <span class="kn">import</span> <span class="n">create_app</span>
+
+<span class="n">options</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s">&quot;SECRET_KEY&quot;</span><span class="p">:</span> <span class="s">&quot;my secret key ;)&quot;</span><span class="p">,</span>
+    <span class="s">&quot;MONGODB_SETTINGS&quot;</span><span class="p">:</span> <span class="p">{</span>
+        <span class="s">&quot;HOST&quot;</span><span class="p">:</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s">&quot;MONGOLAB_URI&quot;</span><span class="p">],</span>
+        <span class="s">&quot;DB&quot;</span><span class="p">:</span> <span class="s">&quot;test&quot;</span> <span class="c"># flask mongoengine bug it wont use DB, but crashes with HOST alone</span>
+        <span class="p">},</span>
+    <span class="s">&quot;CORS_ALLOW_ORIGIN_WHITELIST&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">jeromesteunou</span><span class="o">.</span><span class="n">net</span><span class="s">&#39;, &#39;</span><span class="n">http</span><span class="p">:</span><span class="o">//</span><span class="n">www</span><span class="o">.</span><span class="n">jeromesteunou</span><span class="o">.</span><span class="n">net</span><span class="s">&#39;)</span>
+<span class="p">}</span>
+<span class="n">flask_app</span> <span class="o">=</span> <span class="n">create_app</span><span class="p">(</span><span class="n">options</span><span class="p">)</span>
+</pre></div>
+
+
+<p>3) <em>Procfile</em></p>
+<div class="highlight"><pre><span class="n">web</span><span class="o">:</span> <span class="n">gunicorn</span> <span class="n">mycomimoc</span><span class="o">:</span><span class="n">flask_app</span>
+</pre></div>
+
+
+<p><strong>BOUM</strong> as easy as a pie!</p>
+<h2>API description</h2>
+<p><em>MORE TO COME</em></p>
+          </section>
+      
+  </article>
+
+    
+        
+            <div ng-app="comimoc" ng-controller="CommentCtrl" ng-include="'http://www.jeromesteunou.net/theme/views/comimoc.html'"></div>
+            
+    
+    </section>
+
+
+    <aside>
+    </aside>
+    
+    <footer>
+        <p>
+                        <a href="https://github.com/getpelican/pelican" title="Made with Pelican"><i class="icon-github">&nbsp;</i>Made with Pelican</a>
+                        <a href="http://www.jeromesteunou.net/pages/about.html" title="About"><i class="icon-plus">&nbsp;</i>About</a>
+                        <a href="http://fr.viadeo.com/fr/profile/jerome.steunou" title="Viadeo"><i class="icon-circle-blank">&nbsp;</i>Viadeo</a>
+                        <a href="http://www.jeromesteunou.net/None" title="Feed"><i class="icon-rss">&nbsp;</i>Feed</a>
+                        <a href="mailto:contact@jeromesteunou.net" title="Email"><i class="icon-envelope-alt">&nbsp;</i>Email</a>
+                    </p>
+                <p class="footer_line">Copyright © 2013 Jérôme Steunou.</p>
+            </footer>
+    
+    
+        
+            <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular-resource.min.js"></script>
+    
+    <script>
+        angular.module('comimoc', ['ngResource'])
+            .constant('COMIMOC_CONFIG', {
+                'RESOURCES_LOCATION':   'http://comimoc.herokuapp.com',
+                'WEBSITE':              'jeromesteunou.net',
+                'HASH':                 false,
+                'ARGS':                 false,
+                'LOCALE':               'en',
+                });
+    </script>
+    
+    <script src="http://www.jeromesteunou.net/theme/js/comimoc.js"></script>
+            
+    
+</body>
+</html>
