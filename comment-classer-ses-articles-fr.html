@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8" />
-    <title>Jérôme Steunou - astuce</title>
+    <title>Comment classer ses articles ?</title>
     
         <link href="http://www.jeromesteunou.net/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Jérôme Steunou Full Atom Feed" />
             
@@ -20,7 +20,6 @@
     
 
     <section>
-        
               <article>
     <h1>
       <a href="http://www.jeromesteunou.net/comment-classer-ses-articles-fr.html" rel="bookmark"
@@ -36,34 +35,24 @@
     
     <section class="post-content">
         
-            <p>Parce que trouver une catégorie et des tags à un article c'est des fois plus chiant que de rédiger l'article lui-même. Mais comme j'aime les choses bien rangées et que je suis sympa, voici une astuce.</p>
+            <p>Simple pense bête que je partage, il pourra sûrement vous servir.</p>
+<p>Le problème quand on rédige des articles, surtout avec ce genre d'outils, c'est ; comment les classer ? On se retrouve avec des catégories et des tags. Comment ne pas mélanger les deux ? Comment réussir à bien ranger tout le monde dans les bonnes catégories et trouver les bons tags sans que ça ne devienne vite le bordel comme un week-end de grand pont ensoleillé à La Baule.</p>
+<p>Deux questions :</p>
+<ul>
+<li>Cet article est un ... ? (tuto ? astuce ? simple article ? coup de gueule ? ...)</li>
+<li>Ça parle de ... ? (libre ? python ? <s>php</s> troll ? ...)</li>
+</ul>
+<p>Et voilà vous avez votre catégorie et vos tags.</p>
+<p>Mais de rien.</p>
           </section>
       
   </article>
 
-        
-                      <article>
-    <h1>
-      <a href="http://www.jeromesteunou.net/heberger-son-site-sur-dropbox-fr.html" rel="bookmark"
-        title="Permalink to Héberger son site sur Dropbox">Héberger son site sur Dropbox</a>
-    </h1>
     
-    
-    <footer>
-      <p class="date">jeu. 27 juin 2013</p>
-          <p class="category"><a href="http://www.jeromesteunou.net/category/astuce.html"><i class="icon-folder-close">&nbsp;</i>astuce</a></p>
-              <ul class="tags-list"><li><a href="http://www.jeromesteunou.net/tag/hosting.html"><i class="icon-tag">&nbsp;</i>hosting</a></li><li><a href="http://www.jeromesteunou.net/tag/blog.html"><i class="icon-tag">&nbsp;</i>blog</a></li></ul>
-        </footer>
-    
-    <section class="post-content">
         
-            <p>Petite astuce bien pratique pour héberger un site static gratuitement, facilement et avec des fonctionnalités de synchronisation, que demander de plus !</p>
-          </section>
-      
-  </article>
-
-        
+            <div ng-app="comimoc" ng-controller="CommentCtrl" ng-include="'http://www.jeromesteunou.net/theme/views/comimoc.html'"></div>
             
+    
     </section>
 
 
@@ -81,5 +70,24 @@
                 <p class="footer_line">Copyright © 2013 Jérôme Steunou.</p>
             </footer>
     
-        </body>
+    
+        
+            <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular-resource.min.js"></script>
+    
+    <script>
+        angular.module('comimoc', ['ngResource'])
+            .constant('COMIMOC_CONFIG', {
+                'RESOURCES_LOCATION':   'http://comimoc.herokuapp.com',
+                'WEBSITE':              'jeromesteunou.net',
+                'HASH':                 false,
+                'ARGS':                 false,
+                'LOCALE':               'fr',
+                });
+    </script>
+    
+    <script src="http://www.jeromesteunou.net/theme/js/comimoc.js"></script>
+            
+    
+</body>
 </html>
