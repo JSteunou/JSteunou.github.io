@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Browserify, why and how?</title>
+    
+        <link href="http://www.jeromesteunou.net/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Jérôme Steunou Full Atom Feed" />
+            
+    <link rel="stylesheet" href="http://www.jeromesteunou.net/theme/css/main.css">
+    <!--[if IE]>
+        <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    
+    <header>
+        <h1><a href="http://www.jeromesteunou.net/">Jérôme Steunou</a></h1>
+                        <h2><a href="http://www.jeromesteunou.net/pages/about.html">I code, I manage, I play music, I'm curious.</a></h2>
+                    </header>
+    
+
+    <section>
+              <article>
+    <h1>
+      <a href="http://www.jeromesteunou.net/browserify-why-and-how.html" rel="bookmark"
+        title="Permalink to Browserify, why and how?">Browserify, why and how?</a>
+    </h1>
+    
+    
+    <footer>
+      <p class="date">dim. 16 mars 2014</p>
+          <p class="category"><a href="http://www.jeromesteunou.net/category/article.html"><i class="icon-folder-close">&nbsp;</i>article</a></p>
+              <ul class="tags-list"><li><a href="http://www.jeromesteunou.net/tag/javascript.html"><i class="icon-tag">&nbsp;</i>javascript</a></li><li><a href="http://www.jeromesteunou.net/tag/browserify.html"><i class="icon-tag">&nbsp;</i>browserify</a></li></ul>
+        </footer>
+    
+    <section class="post-content">
+        
+            <p>In this first article of <a href="recipe-for-marionette-handlebars-browserify-grunt.html">my series on marionetteify</a>, I will go through the why I choose Browserify over RequireJS and how using it.</p>
+<h2>Browserify &amp; npm</h2>
+<p>On the <a href="http://todomvc.com/">TodoMVC</a> project you have some good examples with module loaders. But there are all with RequireJS. AMD &amp; RequireJS is a good way to keep your application organized, but I am just tired of RequireJS. Like <a href="http://blog.m4nu.co/the-requirejs-itches-and-how-i-scratched-them-with-browserify/?utm_source=javascriptweekly&amp;utm_medium=email">M4nu</a> and so many people, we see too many flows with the AMD way.</p>
+<p>And <a href="http://espadrine.github.io/New-In-A-Spec/es6/">ES6</a> is coming with <a href="http://blog.ponyfoo.com/2013/12/23/architecture-of-ecmascript-6-modules">module</a> functionality, that is not helping. Like so many I like working with new shiny tools, and ES6 is so promising that I want it now. But even when it will be officially supported by some vendors, there will always be legacy browsers.</p>
+<p>So <a href="http://browserify.org">Browserify</a>. I tried once upon a time. I failed. Not because of Browserify, because of packages. Bower &amp; npm was already there but packages played not well together. All the <code>packages.json</code> was incomplete or missing or messed up.</p>
+<p>Today, jQuery, Backbone &amp; Underscore releases are AMD / CJS compatible, Backbone.Marionette dependencies play well... and they are all available on <a href="https://www.npmjs.org">npm</a>. How can I resist to move from RequireJS? I just cannot.</p>
+<p>So I did:</p>
+<div class="highlight"><pre><span class="n">npm</span> <span class="n">init</span>
+<span class="n">npm</span> <span class="n">install</span> <span class="n">backbone</span> <span class="n">backbone</span><span class="p">.</span><span class="n">marionette</span> <span class="n">jquery</span> <span class="o">--</span><span class="n">save</span><span class="o">-</span><span class="n">dev</span>
+</pre></div>
+
+
+<p>and start writing <a href="https://github.com/JSteunou/marionetteify">marionetteify</a></p>
+<h2>Build</h2>
+<p>So how it works? Very briefly, you just write your app.js like a NodeJS module.</p>
+<div class="highlight"><pre><span class="c1">// Vendors</span>
+<span class="kd">var</span> <span class="nx">$</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;jquery&#39;</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">Backbone</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;backbone&#39;</span><span class="p">);</span>
+<span class="nx">Backbone</span><span class="p">.</span><span class="nx">$</span> <span class="o">=</span> <span class="nx">$</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">Marionette</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;backbone.marionette&#39;</span><span class="p">);</span>
+
+<span class="c1">// app bootstrap</span>
+<span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Marionette</span><span class="p">.</span><span class="nx">Application</span><span class="p">();</span>
+<span class="c1">// ...</span>
+<span class="nx">app</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
+<span class="nx">Backbone</span><span class="p">.</span><span class="nx">history</span><span class="p">.</span><span class="nx">start</span><span class="p">();</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">app</span><span class="p">;</span>
+</pre></div>
+
+
+<p>then you just build</p>
+<div class="highlight"><pre><span class="n">browserify</span> <span class="n">app</span><span class="p">.</span><span class="n">js</span> <span class="o">&gt;</span> <span class="n">bundle</span><span class="p">.</span><span class="n">js</span>
+</pre></div>
+
+
+<h2>Transform</h2>
+<p>And there is more! Not only the code is shorter, more readable, without tons of configuration but it comes with one killer feature: <em>transform</em>, quite like RequireJS plugins system but... just more. More plugins, more simpler, more possibilities...</p>
+<p>With the <code>--transform</code> or <code>-t</code> option and some great plugins you can load not only JavaScript CommonJS module but anything that have a transform plugin. <a href="https://github.com/epeli/node-hbsfy">Handlebars templates</a>, <a href="https://github.com/jnordberg/coffeeify">coffeescript modules</a>, <a href="https://www.npmjs.org/package/amdify">AMD modules</a>, ... </p>
+<div class="highlight"><pre><span class="n">browserify</span> <span class="o">-</span><span class="n">t</span> <span class="n">hbsfy</span> <span class="o">-</span><span class="n">t</span> <span class="n">coffeeify</span> <span class="n">app</span><span class="p">.</span><span class="n">js</span> <span class="o">&gt;</span> <span class="n">bundle</span><span class="p">.</span><span class="n">js</span>
+</pre></div>
+
+
+<p>And voilà, you can require template in your application and write modules in coffeescript.</p>
+<h2>External &amp; require</h2>
+<p>Browserify differ from RequireJS on that it is not an Asynchronous loader. You have to build your application to play with it. Some says building on each modification is not fast enough so using Browserify is painful. But eh: <em>external</em> &amp; <em>require</em></p>
+<p>First with the <code>--external</code> or <code>-x</code> option you can tell Browserify to not fetch some module and build without those. See what's coming? You can build your application without the vendors. Hooo~~ fast, very fast, and very light.</p>
+<p>Ok, but how to provide vendors module now? Yes, you got it, <code>--require</code> or <code>-r</code> option. You can build a bundle from nothing just by telling Browserify you want those modules inside.</p>
+<p>To sum up, you build</p>
+<div class="highlight"><pre><span class="n">browserify</span> <span class="o">-</span><span class="n">t</span> <span class="n">hbsfy</span> <span class="o">-</span><span class="n">t</span> <span class="n">coffeeify</span> <span class="o">-</span><span class="n">x</span> <span class="n">backbone</span> <span class="o">-</span><span class="n">x</span> <span class="n">backbone</span><span class="p">.</span><span class="n">marionette</span> <span class="o">-</span><span class="n">x</span> <span class="n">jquery</span> <span class="n">src</span><span class="o">/</span><span class="n">app</span><span class="p">.</span><span class="n">js</span> <span class="o">&gt;</span> <span class="n">dist</span><span class="o">/</span><span class="n">app</span><span class="p">.</span><span class="n">js</span>
+<span class="n">browserify</span> <span class="o">-</span><span class="n">r</span> <span class="n">backbone</span> <span class="o">-</span><span class="n">r</span> <span class="n">backbone</span><span class="p">.</span><span class="n">marionette</span> <span class="o">-</span><span class="n">r</span> <span class="n">jquery</span> <span class="o">&gt;</span> <span class="n">dist</span><span class="o">/</span><span class="n">vendors</span><span class="p">.</span><span class="n">js</span>
+</pre></div>
+
+
+<p>and you consume</p>
+<div class="highlight"><pre><span class="cp">&lt;!doctype html&gt;</span>
+<span class="nt">&lt;html&gt;</span>
+    <span class="nt">&lt;body&gt;</span>
+        <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;dist/vendors.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+        <span class="nt">&lt;script </span><span class="na">src=</span><span class="s">&quot;dist/app.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+    <span class="nt">&lt;/body&gt;</span>
+<span class="nt">&lt;/html&gt;</span>
+</pre></div>
+
+
+<p>That process will dramatically increased build time will coding.</p>
+<h2>Conclusion</h2>
+<p>So why Browserify?</p>
+<ul>
+<li>quite close of ES6 module syntax</li>
+<li>same NodeJS syntax</li>
+<li><a href="https://www.npmjs.org/">npm</a> power! (63 857 packages and growing)</li>
+<li>very simple but yet very powerful. External and require option are divine!</li>
+<li>great people that build great plugins. Once we taste the transform option to load Handlebars template, coffeescript, AMD, ... you can not go back!</li>
+<li>do not worry anymore about the A of AMD.</li>
+</ul>
+<p>Just <a href="http://browserify.org/">try it</a> if you feel it can fit your needs, but you might not come back :)</p>
+<p><img alt="browserify" src="http://www.jeromesteunou.net/static/images/browserify.png" title="browserify" /></p>
+          </section>
+      
+  </article>
+
+    
+        
+            <div ng-app="comimoc" ng-controller="CommentCtrl" ng-include="'http://www.jeromesteunou.net/theme/views/comimoc.html'"></div>
+            
+    
+    </section>
+
+
+    <aside>
+    </aside>
+    
+    <footer>
+        <p>
+                        <a href="https://github.com/getpelican/pelican" title="Made with Pelican"><i class="icon-github">&nbsp;</i>Made with Pelican</a>
+                        <a href="http://www.jeromesteunou.net/pages/comimoc.html" title="Comimoc project"><i class="icon-comments">&nbsp;</i>Comimoc project</a>
+                        <a href="http://www.jeromesteunou.net/pages/about.html" title="About"><i class="icon-plus">&nbsp;</i>About</a>
+                        <a href="http://fr.viadeo.com/fr/profile/jerome.steunou" title="Viadeo"><i class="icon-circle-blank">&nbsp;</i>Viadeo</a>
+                        <a href="http://www.jeromesteunou.net/None" title="Feed"><i class="icon-rss">&nbsp;</i>Feed</a>
+                        <a href="mailto:contact@jeromesteunou.net" title="Email"><i class="icon-envelope-alt">&nbsp;</i>Email</a>
+                    </p>
+                <p class="footer_line">Copyright © 2013 Jérôme Steunou.</p>
+            </footer>
+    
+    
+        
+            <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular-resource.min.js"></script>
+    
+    <script>
+        angular.module('comimoc', ['ngResource'])
+            .constant('COMIMOC_CONFIG', {
+                'RESOURCES_LOCATION':   'http://comimoc.herokuapp.com',
+                'WEBSITE':              'jeromesteunou.net',
+                'HASH':                 false,
+                'ARGS':                 false,
+                'LOCALE':               'en',
+                });
+    </script>
+    
+    <script src="http://www.jeromesteunou.net/theme/js/comimoc.js"></script>
+            
+    
+</body>
+</html>

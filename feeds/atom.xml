@@ -1,5 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Jérôme Steunou</title><link href="http://www.jeromesteunou.net/" rel="alternate"></link><link href="http://www.jeromesteunou.net/feeds/atom.xml" rel="self"></link><id>http://www.jeromesteunou.net/</id><updated>2013-09-22T00:00:00+02:00</updated><entry><title>Simplifions notre fonctionnement avec le Revenu de Base Inconditionnel</title><link href="http://www.jeromesteunou.net/le-revenu-de-base-inconditionnel-fr.html" rel="alternate"></link><updated>2013-09-22T00:00:00+02:00</updated><author><name>Jérôme Steunou</name></author><id>tag:www.jeromesteunou.net,2013-09-22:le-revenu-de-base-inconditionnel-fr.html</id><summary type="html">&lt;p&gt;L'idée d'un revenu de base (universel ou inconditionnel) fait son petit bonhomme de chemin, et le dernier billet de &lt;a href="http://ploum.net/pourquoi-vous-etes-sans-le-savoir-favorable-au-revenu-de-base/"&gt;Ploum&lt;/a&gt; en est un formidable exemple. J'aime beaucoup les articles de Ploum, et sa réflexion, &lt;a href="http://bien.ch/fr/page/faq-sur-revenu-de-base"&gt;ainsi que celle des suisses&lt;/a&gt;, ou de &lt;a href="http://future.arte.tv/fr/sujet/le-revenu-de-base-promesse-dun-avenir-meilleur"&gt;ces messieurs&lt;/a&gt; et les constats &lt;a href="http://fr.wikipedia.org/wiki/Revenu_de_base#Impl.C3.A9mentations"&gt;des différentes expériences&lt;/a&gt;, autour du RBI sont très intéressants.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Jérôme Steunou</title><link href="http://www.jeromesteunou.net/" rel="alternate"></link><link href="http://www.jeromesteunou.net/feeds/atom.xml" rel="self"></link><id>http://www.jeromesteunou.net/</id><updated>2014-03-16T00:00:00+01:00</updated><entry><title>Browserify, why and how?</title><link href="http://www.jeromesteunou.net/browserify-why-and-how.html" rel="alternate"></link><updated>2014-03-16T00:00:00+01:00</updated><author><name>Jérôme Steunou</name></author><id>tag:www.jeromesteunou.net,2014-03-16:browserify-why-and-how.html</id><summary type="html">&lt;p&gt;In this first article of &lt;a href="recipe-for-marionette-handlebars-browserify-grunt.html"&gt;my series on marionetteify&lt;/a&gt;, I will go through the why I choose Browserify over RequireJS and how using it.&lt;/p&gt;
+&lt;h2&gt;Browserify &amp;amp; npm&lt;/h2&gt;
+&lt;p&gt;On the &lt;a href="http://todomvc.com/"&gt;TodoMVC&lt;/a&gt; project you have some good examples with module loaders. But there are all with RequireJS. AMD &amp;amp; RequireJS is a good way to keep your application organized, but I am just tired of RequireJS. Like &lt;a href="http://blog.m4nu.co/the-requirejs-itches-and-how-i-scratched-them-with-browserify/?utm_source=javascriptweekly&amp;amp;utm_medium=email"&gt;M4nu&lt;/a&gt; and so many people, we see too many flows with the AMD way.&lt;/p&gt;
+&lt;p&gt;And &lt;a href="http://espadrine.github.io/New-In-A-Spec/es6/"&gt;ES6&lt;/a&gt; is coming with &lt;a href="http://blog.ponyfoo.com/2013/12/23/architecture-of-ecmascript-6-modules"&gt;module&lt;/a&gt; functionality, that is not helping. Like so many I like working with new shiny tools, and ES6 is so promising that I want it now. But even when it will be officially supported by some vendors, there will always be legacy browsers.&lt;/p&gt;
+&lt;p&gt;So &lt;a href="http://browserify.org"&gt;Browserify&lt;/a&gt;. I tried once upon a time. I failed. Not because of Browserify, because of packages. Bower &amp;amp; npm was already there but packages played not well together. All the &lt;code&gt;packages.json&lt;/code&gt; was incomplete or missing or messed up.&lt;/p&gt;
+&lt;p&gt;Today, jQuery, Backbone &amp;amp; Underscore releases are AMD / CJS compatible, Backbone.Marionette dependencies play well... and they are all available on &lt;a href="https://www.npmjs.org"&gt;npm&lt;/a&gt;. How can I resist to move from RequireJS? I just cannot.&lt;/p&gt;
+&lt;p&gt;So I did:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;npm&lt;/span&gt; &lt;span class="n"&gt;init&lt;/span&gt;
+&lt;span class="n"&gt;npm&lt;/span&gt; &lt;span class="n"&gt;install&lt;/span&gt; &lt;span class="n"&gt;backbone&lt;/span&gt; &lt;span class="n"&gt;backbone&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;marionette&lt;/span&gt; &lt;span class="n"&gt;jquery&lt;/span&gt; &lt;span class="o"&gt;--&lt;/span&gt;&lt;span class="n"&gt;save&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;dev&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;and start writing &lt;a href="https://github.com/JSteunou/marionetteify"&gt;marionetteify&lt;/a&gt;&lt;/p&gt;
+&lt;h2&gt;Build&lt;/h2&gt;
+&lt;p&gt;So how it works? Very briefly, you just write your app.js like a NodeJS module.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// Vendors&lt;/span&gt;
+&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;$&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;jquery&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;Backbone&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;backbone&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="nx"&gt;Backbone&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;$&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;Marionette&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;backbone.marionette&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+&lt;span class="c1"&gt;// app bootstrap&lt;/span&gt;
+&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;app&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;Marionette&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;Application&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;span class="c1"&gt;// ...&lt;/span&gt;
+&lt;span class="nx"&gt;app&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;start&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+&lt;span class="nx"&gt;Backbone&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;history&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;start&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
+
+&lt;span class="nx"&gt;module&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;exports&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;app&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;then you just build&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;browserify&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;bundle&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;h2&gt;Transform&lt;/h2&gt;
+&lt;p&gt;And there is more! Not only the code is shorter, more readable, without tons of configuration but it comes with one killer feature: &lt;em&gt;transform&lt;/em&gt;, quite like RequireJS plugins system but... just more. More plugins, more simpler, more possibilities...&lt;/p&gt;
+&lt;p&gt;With the &lt;code&gt;--transform&lt;/code&gt; or &lt;code&gt;-t&lt;/code&gt; option and some great plugins you can load not only JavaScript CommonJS module but anything that have a transform plugin. &lt;a href="https://github.com/epeli/node-hbsfy"&gt;Handlebars templates&lt;/a&gt;, &lt;a href="https://github.com/jnordberg/coffeeify"&gt;coffeescript modules&lt;/a&gt;, &lt;a href="https://www.npmjs.org/package/amdify"&gt;AMD modules&lt;/a&gt;, ... &lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;browserify&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt; &lt;span class="n"&gt;hbsfy&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt; &lt;span class="n"&gt;coffeeify&lt;/span&gt; &lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;bundle&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And voilà, you can require template in your application and write modules in coffeescript.&lt;/p&gt;
+&lt;h2&gt;External &amp;amp; require&lt;/h2&gt;
+&lt;p&gt;Browserify differ from RequireJS on that it is not an Asynchronous loader. You have to build your application to play with it. Some says building on each modification is not fast enough so using Browserify is painful. But eh: &lt;em&gt;external&lt;/em&gt; &amp;amp; &lt;em&gt;require&lt;/em&gt;&lt;/p&gt;
+&lt;p&gt;First with the &lt;code&gt;--external&lt;/code&gt; or &lt;code&gt;-x&lt;/code&gt; option you can tell Browserify to not fetch some module and build without those. See what's coming? You can build your application without the vendors. Hooo~~ fast, very fast, and very light.&lt;/p&gt;
+&lt;p&gt;Ok, but how to provide vendors module now? Yes, you got it, &lt;code&gt;--require&lt;/code&gt; or &lt;code&gt;-r&lt;/code&gt; option. You can build a bundle from nothing just by telling Browserify you want those modules inside.&lt;/p&gt;
+&lt;p&gt;To sum up, you build&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;browserify&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt; &lt;span class="n"&gt;hbsfy&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;t&lt;/span&gt; &lt;span class="n"&gt;coffeeify&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="n"&gt;backbone&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="n"&gt;backbone&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;marionette&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;x&lt;/span&gt; &lt;span class="n"&gt;jquery&lt;/span&gt; &lt;span class="n"&gt;src&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;app&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt;
+&lt;span class="n"&gt;browserify&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="n"&gt;backbone&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="n"&gt;backbone&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;marionette&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;r&lt;/span&gt; &lt;span class="n"&gt;jquery&lt;/span&gt; &lt;span class="o"&gt;&amp;gt;&lt;/span&gt; &lt;span class="n"&gt;dist&lt;/span&gt;&lt;span class="o"&gt;/&lt;/span&gt;&lt;span class="n"&gt;vendors&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;js&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;and you consume&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="cp"&gt;&amp;lt;!doctype html&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;html&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;body&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;script &lt;/span&gt;&lt;span class="na"&gt;src=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;dist/vendors.js&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+        &lt;span class="nt"&gt;&amp;lt;script &lt;/span&gt;&lt;span class="na"&gt;src=&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;dist/app.js&amp;quot;&lt;/span&gt;&lt;span class="nt"&gt;&amp;gt;&amp;lt;/script&amp;gt;&lt;/span&gt;
+    &lt;span class="nt"&gt;&amp;lt;/body&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;/html&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;That process will dramatically increased build time will coding.&lt;/p&gt;
+&lt;h2&gt;Conclusion&lt;/h2&gt;
+&lt;p&gt;So why Browserify?&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;quite close of ES6 module syntax&lt;/li&gt;
+&lt;li&gt;same NodeJS syntax&lt;/li&gt;
+&lt;li&gt;&lt;a href="https://www.npmjs.org/"&gt;npm&lt;/a&gt; power! (63 857 packages and growing)&lt;/li&gt;
+&lt;li&gt;very simple but yet very powerful. External and require option are divine!&lt;/li&gt;
+&lt;li&gt;great people that build great plugins. Once we taste the transform option to load Handlebars template, coffeescript, AMD, ... you can not go back!&lt;/li&gt;
+&lt;li&gt;do not worry anymore about the A of AMD.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Just &lt;a href="http://browserify.org/"&gt;try it&lt;/a&gt; if you feel it can fit your needs, but you might not come back :)&lt;/p&gt;
+&lt;p&gt;&lt;img alt="browserify" src="http://www.jeromesteunou.net/static/images/browserify.png" title="browserify" /&gt;&lt;/p&gt;</summary><category term="javascript"></category><category term="browserify"></category></entry><entry><title>Recipe of a production ready front-end Marionette application</title><link href="http://www.jeromesteunou.net/recipe-for-marionette-handlebars-browserify-grunt.html" rel="alternate"></link><updated>2014-03-15T00:00:00+01:00</updated><author><name>Jérôme Steunou</name></author><id>tag:www.jeromesteunou.net,2014-03-15:recipe-for-marionette-handlebars-browserify-grunt.html</id><summary type="html">&lt;p&gt;I have been away of this blog for too long. New job, new house. The time goes pretty damn fast. In 6 months the JavaScript environment goes fast too!&lt;/p&gt;
+&lt;p&gt;Today I come back with a new series of articles that will live along this project: &lt;a href="https://github.com/JSteunou/marionetteify"&gt;marionetteify&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;It is based on the &lt;a href="http://todomvc.com"&gt;TodoMVC Project&lt;/a&gt;. The motivation behind this project is to bring an example of how a front-end JavaScript project can be serious and production ready.&lt;/p&gt;
+&lt;p&gt;The main goal is to help JavaScript developers to catch up with the actual great tools and give a real word alike application structure with complete tool chain.&lt;/p&gt;
+&lt;h2&gt;Featuring&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Backbone&lt;/li&gt;
+&lt;li&gt;Backbone.Marionette&lt;/li&gt;
+&lt;li&gt;Backbone.Localstorage&lt;/li&gt;
+&lt;li&gt;Handlebars&lt;/li&gt;
+&lt;li&gt;Jed (coming soon)&lt;/li&gt;
+&lt;li&gt;Browserify&lt;/li&gt;
+&lt;li&gt;Grunt for&lt;ul&gt;
+&lt;li&gt;serving&lt;/li&gt;
+&lt;li&gt;watching&lt;/li&gt;
+&lt;li&gt;live-reloading&lt;/li&gt;
+&lt;li&gt;building&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Running marionetteify&lt;/h2&gt;
+&lt;p&gt;Just clone the project, or grab the zip, and run the index.html. There is nothing more and less than the classic TodoMVC application.&lt;/p&gt;
+&lt;h2&gt;Walkthough the code&lt;/h2&gt;
+&lt;p&gt;I am preparing a series of articles to explain the choice I made on &lt;code&gt;marionetteify&lt;/code&gt; and help you to understand the benefits of using those tools or concepts.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href="browserify-why-and-how.html"&gt;Browserify&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;Grunt&lt;/li&gt;
+&lt;li&gt;Marionette modules&lt;/li&gt;
+&lt;li&gt;i18n with Jed&lt;/li&gt;
+&lt;li&gt;less / css&lt;/li&gt;
+&lt;li&gt;Cordova&lt;/li&gt;
+&lt;/ul&gt;</summary><category term="javascript"></category><category term="marionette"></category><category term="browserify"></category><category term="grunt"></category></entry><entry><title>Simplifions notre fonctionnement avec le Revenu de Base Inconditionnel</title><link href="http://www.jeromesteunou.net/le-revenu-de-base-inconditionnel-fr.html" rel="alternate"></link><updated>2013-09-22T00:00:00+02:00</updated><author><name>Jérôme Steunou</name></author><id>tag:www.jeromesteunou.net,2013-09-22:le-revenu-de-base-inconditionnel-fr.html</id><summary type="html">&lt;p&gt;L'idée d'un revenu de base (universel ou inconditionnel) fait son petit bonhomme de chemin, et le dernier billet de &lt;a href="http://ploum.net/pourquoi-vous-etes-sans-le-savoir-favorable-au-revenu-de-base/"&gt;Ploum&lt;/a&gt; en est un formidable exemple. J'aime beaucoup les articles de Ploum, et sa réflexion, &lt;a href="http://bien.ch/fr/page/faq-sur-revenu-de-base"&gt;ainsi que celle des suisses&lt;/a&gt;, ou de &lt;a href="http://future.arte.tv/fr/sujet/le-revenu-de-base-promesse-dun-avenir-meilleur"&gt;ces messieurs&lt;/a&gt; et les constats &lt;a href="http://fr.wikipedia.org/wiki/Revenu_de_base#Impl.C3.A9mentations"&gt;des différentes expériences&lt;/a&gt;, autour du RBI sont très intéressants.&lt;/p&gt;
 &lt;p&gt;Le débat s'est installé autour d'une table avec des amis et nous sommes d'accords sur plusieurs points : le système français est une grosse machine poussive, coûteuse et injuste. Il y a du bon, mais ces derniers temps l'exaspération autour du moins bon gagne les français. Par contre, la solution du RBI, une des solutions pour améliorer le système, pose de multiples questions, dont une que je souhaitais développer en détail : &lt;/p&gt;
 &lt;h2&gt;Comment verser 1000€ à tout le monde ?&lt;/h2&gt;
 &lt;p&gt;Mais vous êtes fou, un communo-socialiste de la pire espèce, où allons nous trouver tout cet argent ? Ce n'est pas possible, plus personne ne voudra travailler, le pays va s'endetter encore plus, et puis il y aura encore plus de profiteurs, mais si, ceux qui ne font rien et gagnent plus que moi à coups d'alloc !&lt;/p&gt;
@@ -169,6 +277,4 @@
 &lt;li&gt;le coller dans un navigateur pour tester, et tadaaaa&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Si vous utiliser des feuilles de style CSS et / ou des fichiers de scripts JS vous pouvez utiliser des URL relatives, ça fonctionne très bien. Ensuite, vous pouvez très bien acheter un nom de domain, chez &lt;a href="https://www.gandi.net/"&gt;Gandi&lt;/a&gt; par exemple, et le lier à votre répertoire public dropbox.&lt;/p&gt;
-&lt;p&gt;Et voilà :)&lt;/p&gt;</summary><category term="hosting"></category><category term="blog"></category></entry><entry><title>Hello World</title><link href="http://www.jeromesteunou.net/hello-world-fr.html" rel="alternate"></link><updated>2013-06-24T00:00:00+02:00</updated><author><name>Jérôme Steunou</name></author><id>tag:www.jeromesteunou.net,2013-06-24:hello-world-fr.html</id><summary type="html">&lt;h2&gt;Hello le web !&lt;/h2&gt;
-&lt;p&gt;Je me décide enfin à ouvrir un blog digne de ce nom, pour mettre par écrit tous les billets technique que j'ai voulu écrire ses dernières années. Pour avoir un aide mémoire sous la main, pour toutes ces petites astuces que l'on trouve un jour, que l'on utilise, et que l'on ne retrouve plus 6 mois après. Pour partager mes réflexions sur le métier de développeur et de chef de projet. Pour m'enthousiasmer publiquement des nouvelles sorties de mes librairies et outils préférés. Pour répendre la bonne parole pythonic et libre !&lt;/p&gt;
-&lt;p&gt;Ce blog est entièrement statique, versionné via &lt;a href="http://git-scm.com/"&gt;Git&lt;/a&gt;, hébergé via &lt;a href="https://pages.github.com/"&gt;Github Page&lt;/a&gt;, généré par &lt;a href="http://getpelican.com"&gt;Pelican&lt;/a&gt;&lt;/p&gt;</summary><category term="blog"></category></entry></feed>
+&lt;p&gt;Et voilà :)&lt;/p&gt;</summary><category term="hosting"></category><category term="blog"></category></entry></feed>
