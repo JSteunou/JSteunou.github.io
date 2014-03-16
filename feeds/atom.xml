@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>Jérôme Steunou</title><link href="http://www.jeromesteunou.net/" rel="alternate"></link><link href="http://www.jeromesteunou.net/feeds/atom.xml" rel="self"></link><id>http://www.jeromesteunou.net/</id><updated>2014-03-16T00:00:00+01:00</updated><entry><title>Browserify, why and how?</title><link href="http://www.jeromesteunou.net/browserify-why-and-how.html" rel="alternate"></link><updated>2014-03-16T00:00:00+01:00</updated><author><name>Jérôme Steunou</name></author><id>tag:www.jeromesteunou.net,2014-03-16:browserify-why-and-how.html</id><summary type="html">&lt;p&gt;In this first article of &lt;a href="recipe-for-marionette-handlebars-browserify-grunt.html"&gt;my series on marionetteify&lt;/a&gt;, I will go through the why I choose Browserify over RequireJS and how using it.&lt;/p&gt;
-&lt;h2&gt;Browserify &amp;amp; npm&lt;/h2&gt;
+&lt;h2&gt;NPM: Node Packaged Modules&lt;/h2&gt;
+&lt;p&gt;A little parenthesis on &lt;code&gt;npm&lt;/code&gt;. When you have big project, you have a big &lt;em&gt;vendors&lt;/em&gt; folder. And it is painful to keep those libraries up to date. That is why in a lot of environment you have a package manager. JavaScript got none a while ago. But with NodeJS comes &lt;a href="https://www.npmjs.org"&gt;npm&lt;/a&gt;, then &lt;a href="http://bower.io/"&gt;bower&lt;/a&gt; for the front-end trying to mimic npm. At this time, npm could not easily be used for front-end development because there was no tools handling CommonJS alike modules, only AMD. Too bad, because I find npm more powerful, acting like a real package manager with a repository while can also consume github and local files. Browserify was the solution. It plays by default very well with node modules, handle by npm. This couple is like an evidence.&lt;/p&gt;
+&lt;h2&gt;Browserify&lt;/h2&gt;
 &lt;p&gt;On the &lt;a href="http://todomvc.com/"&gt;TodoMVC&lt;/a&gt; project you have some good examples with module loaders. But there are all with RequireJS. AMD &amp;amp; RequireJS is a good way to keep your application organized, but I am just tired of RequireJS. Like &lt;a href="http://blog.m4nu.co/the-requirejs-itches-and-how-i-scratched-them-with-browserify/?utm_source=javascriptweekly&amp;amp;utm_medium=email"&gt;M4nu&lt;/a&gt; and so many people, we see too many flows with the AMD way.&lt;/p&gt;
 &lt;p&gt;And &lt;a href="http://espadrine.github.io/New-In-A-Spec/es6/"&gt;ES6&lt;/a&gt; is coming with &lt;a href="http://blog.ponyfoo.com/2013/12/23/architecture-of-ecmascript-6-modules"&gt;module&lt;/a&gt; functionality, that is not helping. Like so many I like working with new shiny tools, and ES6 is so promising that I want it now. But even when it will be officially supported by some vendors, there will always be legacy browsers.&lt;/p&gt;
 &lt;p&gt;So &lt;a href="http://browserify.org"&gt;Browserify&lt;/a&gt;. I tried once upon a time. I failed. Not because of Browserify, because of packages. Bower &amp;amp; npm was already there but packages played not well together. All the &lt;code&gt;packages.json&lt;/code&gt; was incomplete or missing or messed up.&lt;/p&gt;
@@ -101,7 +103,7 @@
 &lt;h2&gt;Walkthough the code&lt;/h2&gt;
 &lt;p&gt;I am preparing a series of articles to explain the choice I made on &lt;code&gt;marionetteify&lt;/code&gt; and help you to understand the benefits of using those tools or concepts.&lt;/p&gt;
 &lt;ul&gt;
-&lt;li&gt;&lt;a href="browserify-why-and-how.html"&gt;Browserify&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href="browserify-why-and-how.html"&gt;npm &amp;amp; Browserify&lt;/a&gt;&lt;/li&gt;
 &lt;li&gt;Grunt&lt;/li&gt;
 &lt;li&gt;Marionette modules&lt;/li&gt;
 &lt;li&gt;i18n with Jed&lt;/li&gt;
