@@ -2,7 +2,7 @@
 <feed xmlns="http://www.w3.org/2005/Atom"><title>Jérôme Steunou</title><link href="http://www.jeromesteunou.net/" rel="alternate"></link><link href="http://www.jeromesteunou.net/feeds/atom.xml" rel="self"></link><id>http://www.jeromesteunou.net/</id><updated>2014-08-10T00:00:00+02:00</updated><entry><title>Internationalization in JavaScript</title><link href="http://www.jeromesteunou.net/internationalisation-in-javascript.html" rel="alternate"></link><updated>2014-08-10T00:00:00+02:00</updated><author><name>Jérôme Steunou</name></author><id>tag:www.jeromesteunou.net,2014-08-10:internationalisation-in-javascript.html</id><summary type="html">&lt;p&gt;I just released &lt;a href="https://github.com/JSteunou/grunt-jspot"&gt;grunt-jspot&lt;/a&gt; yesterday, a simple grunt task for &lt;a href="https://github.com/praekelt/jspot"&gt;jspot&lt;/a&gt;, an extraordinary gettext extractor tool for JavaScript.&lt;/p&gt;
 &lt;p&gt;jspot is like the missing piece I was looking for so long to do internationalization in JavaScript. I mean, real internationalization, using standard and stuff.&lt;/p&gt;
 &lt;p&gt;But talking about it make me realize internationalization is not well understood and seems like a very difficult beast to harness for JavaScript application.&lt;/p&gt;
-&lt;p&gt;I hope this tutorial could help a lot and make developers use internationalization a lot without fear. &lt;/p&gt;
+&lt;p&gt;I hope this tutorial could help a lot and make developers use internationalization everywhere without fear. &lt;/p&gt;
 &lt;h2&gt;Big picture&lt;/h2&gt;
 &lt;h3&gt;What is internationalization?&lt;/h3&gt;
 &lt;p&gt;I will just quote wikipedia, because it sum it up very well:&lt;/p&gt;
