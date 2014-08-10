@@ -73,6 +73,15 @@ blockquote > p {
     margin-left: 70px;
 }
 
+/* add default color */
+.highlight pre {
+    color: #DDD;
+}
+
+.center {
+    text-align: center;
+    display: block;
+}
 
 /*****************
  *     index
@@ -133,7 +142,7 @@ body > footer {
 body > footer a {
     text-decoration: none;
     margin: 0 0.4em;
-    
+
 }
 body > footer .footer_line {
     color: #AAA;
@@ -187,7 +196,7 @@ article > footer > ul.tags-list {
 /******************
  * pagination
  ******************/
- 
+
  .paginator {
     margin-top: 40px;
     text-align: right;
@@ -195,4 +204,4 @@ article > footer > ul.tags-list {
  .paginator a {
     text-decoration: none;
 }
- 
+

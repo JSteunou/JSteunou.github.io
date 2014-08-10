@@ -82,7 +82,9 @@
 <p>Show me how it works in a software!</p>
 </blockquote>
 <p>Ok, first, the big picture, please dont run away, it's easier than it's look like ;)</p>
-<p><img alt="gettext" src="http://www.jeromesteunou.net/static/images/gettext.png" title="gettext scheme" /></p>
+<p><span class="center">
+<img alt="gettext" src="http://www.jeromesteunou.net/static/images/gettext.png" title="gettext scheme" />
+</span></p>
 <h2>Concrete example in JavaScript</h2>
 <h3>Using a gettext JavaScript implementation</h3>
 <p>Looking at the presentation above, you see you need a JavaScript implementation of gettext. I will use <a href="http://slexaxton.github.io/Jed/">Jed</a>. But you are free to use whatever you like. That's the beauty of this system, each tool at each step can be changed by another tool if you want.</p>
@@ -165,11 +167,17 @@
 <p>But I will told you about the graphical way, which allow me to show you how to translate too :)</p>
 <p>The tool I'm using to create and manage my catalogs is <a href="http://poedit.net/">POEdit</a>. It's free, open source, and runs on different OS.</p>
 <p>Launch it, and go in file &gt; New from pot file (or a thing like that). Select your dictionary previously created and fill in some information. Do not forget to fill in the <a href="http://docs.translatehouse.org/projects/localization-guide/en/latest/l10n/pluralforms.html?id=l10n/pluralforms">correct plural form</a> for you catalog.</p>
-<p><img alt="poeditinit" src="http://www.jeromesteunou.net/static/images/poedit_init.png" title="create a catalog from pot" /></p>
+<p><span class="center">
+<img alt="poeditinit" src="http://www.jeromesteunou.net/static/images/poedit_init.png" title="create a catalog from pot" />
+</span></p>
 <p>There is also a catalog manager, which help you to: see your catalogs per project, update your catalogs when the dictionary was updated, see your catalogs status (green: translation = 100%).</p>
-<p><img alt="poeditcatalog" src="http://www.jeromesteunou.net/static/images/poedit_catalog.png" title="catalog manager" /></p>
+<p><span class="center">
+<img alt="poeditcatalog" src="http://www.jeromesteunou.net/static/images/poedit_catalog.png" title="catalog manager" />
+</span></p>
 <p>Select a catalog to edit it and update translations. For a translation with singular &amp; plural keys, you just have to fill the different possible forms the language can have without bothering about the <em>when</em> use it. Gettext will handle it for you.</p>
-<p><img alt="poedittranslate" src="http://www.jeromesteunou.net/static/images/poedit_translate.png" title="using poedit to translate" /></p>
+<p><span class="center">
+<img alt="poedittranslate" src="http://www.jeromesteunou.net/static/images/poedit_translate.png" title="using poedit to translate" />
+</span></p>
 <p>Now you know about creating and updating catalogs but also translate your application!</p>
 <blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
 <p>Hey, one last thing, catalogs are .po or .mo files. Jed only read JSON!</p>
@@ -199,7 +207,9 @@
 <p>The <code>format: 'jed'</code> option matters because it will wrap the generated object into jed options. With this you will just have to write <code>new Jed(myCatalog)</code> instead of <code>new Jed({domain: 'myDomain', locale_data: MyCatalog})</code></p>
 <p>About how to load the catalog, I will leave this to what you prefer. You can <code>var frCatalog = require('./locales/fr');</code> if you are using CommonJS syntax, or <code>define['json!./locales/fr.json', ...], frCatalog, ...</code> if you are using AMD syntax. Or just use ajax if you are not really in modules.</p>
 <p>That's it! I think if you are looking at the schema above, the circle is closed know.</p>
-<p><img alt="gettextend" src="http://www.jeromesteunou.net/static/images/gettext_end.png" title="gettext end scheme" /></p>
+<p><span class="center">
+<img alt="gettextend" src="http://www.jeromesteunou.net/static/images/gettext_end.png" title="gettext end scheme" />
+</span></p>
 <h2>Bonus</h2>
 <blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
 <p>I'm using Handlebars, can I extract gettext strings from it with jspot?</p>
