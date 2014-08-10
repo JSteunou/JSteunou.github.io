@@ -138,7 +138,7 @@
 &lt;p&gt;&lt;span class="center"&gt;
 &lt;img alt="poeditcatalog" src="http://www.jeromesteunou.net/static/images/poedit_catalog.png" title="catalog manager" /&gt;
 &lt;/span&gt;&lt;/p&gt;
-&lt;p&gt;Select a catalog to edit it and update translations. For a translation with singular &amp;amp; plural keys, you just have to fill the different possible forms the language can have without bothering about the &lt;em&gt;when&lt;/em&gt; use it. Gettext will handle it for you.&lt;/p&gt;
+&lt;p&gt;Select a catalog to edit it and update translations. For a translation with singular &amp;amp; plural keys, you just have to fill the different possible forms the language can have without bothering about &lt;em&gt;when&lt;/em&gt; to use it. Gettext will handle it for you.&lt;/p&gt;
 &lt;p&gt;&lt;span class="center"&gt;
 &lt;img alt="poedittranslate" src="http://www.jeromesteunou.net/static/images/poedit_translate.png" title="using poedit to translate" /&gt;
 &lt;/span&gt;&lt;/p&gt;
