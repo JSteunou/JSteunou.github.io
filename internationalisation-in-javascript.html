@@ -125,6 +125,9 @@
 <div class="highlight"><pre><span class="nx">grunt</span><span class="p">.</span><span class="nx">initConfig</span><span class="p">({</span>
     <span class="nx">jspot</span><span class="o">:</span> <span class="p">{</span>
         <span class="nx">myCoolProject</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">options</span><span class="o">:</span> <span class="p">{</span>
+                <span class="nx">keyword</span><span class="o">:</span> <span class="s1">&#39;i18n&#39;</span>
+            <span class="p">},</span>
             <span class="nx">files</span><span class="o">:</span> <span class="p">{</span>
                 <span class="s1">&#39;locales&#39;</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;src/**/*.js&#39;</span><span class="p">]</span>
             <span class="p">}</span>            
@@ -136,6 +139,7 @@
 </pre></div>
 
 
+<p><em>Side note: I'm using the keyword option because the jspot default keyword is gettext, which is pretty standard. jspot is looking for keyword(), keyword.gettext(), keyword.ngettext(), ... calls. But I prefer to not named my Jed instance gettext because it can be confusing.</em></p>
 <p>If your application contains a call to gettext like this</p>
 <div class="highlight"><pre><span class="nx">i18n</span><span class="p">.</span><span class="nx">gettext</span><span class="p">(</span><span class="s1">&#39;Hello World!&#39;</span><span class="p">);</span>
 </pre></div>
@@ -216,13 +220,13 @@
 </blockquote>
 <p>Sure you can!</p>
 <p>Supposing <code>i18n</code> is your Jed instance. Add a helper like this:</p>
-<div class="highlight"><pre><span class="nx">Handlebars</span><span class="p">.</span><span class="nx">registerHelper</span><span class="p">(</span><span class="s1">&#39;gettext&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+<div class="highlight"><pre><span class="nx">Handlebars</span><span class="p">.</span><span class="nx">registerHelper</span><span class="p">(</span><span class="s1">&#39;i18n.gettext&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
     <span class="c1">// arguments = in template params + a handlebars hash</span>
     <span class="c1">// this = in template context</span>
     <span class="k">return</span> <span class="nx">i18n</span><span class="p">.</span><span class="nx">gettext</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">i18n</span><span class="p">,</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)));</span>
 <span class="p">});</span>
 
-<span class="nx">Handlebars</span><span class="p">.</span><span class="nx">registerHelper</span><span class="p">(</span><span class="s1">&#39;gettext.ngettext&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+<span class="nx">Handlebars</span><span class="p">.</span><span class="nx">registerHelper</span><span class="p">(</span><span class="s1">&#39;i18n.ngettext&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
     <span class="c1">// arguments = in template params + a handlebars hash</span>
     <span class="c1">// this = in template context</span>
     <span class="k">return</span> <span class="nx">i18n</span><span class="p">.</span><span class="nx">ngettext</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">i18n</span><span class="p">,</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)));</span>
@@ -231,8 +235,8 @@
 
 
 <p>Use it:</p>
-<div class="highlight"><pre><span class="nt">&lt;div&gt;</span>{{gettext &quot;I&#39;m singular&quot; }}<span class="nt">&lt;/div&gt;</span>
-<span class="nt">&lt;div&gt;</span>{{gettext.ngettext &quot;cat&quot; &quot;cats&quot; much }}<span class="nt">&lt;/div&gt;</span>
+<div class="highlight"><pre><span class="nt">&lt;div&gt;</span>{{i18n.gettext &quot;I&#39;m singular&quot; }}<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;div&gt;</span>{{i18n.ngettext &quot;cat&quot; &quot;cats&quot; much }}<span class="nt">&lt;/div&gt;</span>
 </pre></div>
 
 
@@ -240,6 +244,9 @@
 <div class="highlight"><pre><span class="nx">grunt</span><span class="p">.</span><span class="nx">initConfig</span><span class="p">({</span>
     <span class="nx">jspot</span><span class="o">:</span> <span class="p">{</span>
         <span class="nx">myCoolProject</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">options</span><span class="o">:</span> <span class="p">{</span>
+                <span class="nx">keyword</span><span class="o">:</span> <span class="s1">&#39;i18n&#39;</span>
+            <span class="p">},</span>
             <span class="nx">files</span><span class="o">:</span> <span class="p">{</span>
                 <span class="s1">&#39;locales&#39;</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;src/**/*.js&#39;</span><span class="p">,</span> <span class="s1">&#39;src/**/*.hbs&#39;</span><span class="p">]</span>
             <span class="p">}</span>            
@@ -272,7 +279,7 @@
 <p>Translators will see <code>I have %d toasters.</code> as the plural key for this entry and will have to let the <code>%d</code> but can put it anywhere in the sentence. This is useful because some language do not have the same words order than English.
 You can also use positional syntax if you have more than one number in your sentence and care about order in other languages. http://www.diveintojavascript.com/projects/javascript-sprintf</p>
 <p>Moreover, you can do the same into Handlebars, thanks to Handlebars sub-expressions. Supposing you had registered a <em>sprintf</em> helper</p>
-<div class="highlight"><pre><span class="nt">&lt;div&gt;</span>{{sprintf (gettext.ngettext &quot;%d cat&quot; &quot;%d cats&quot; much) much }}<span class="nt">&lt;/div&gt;</span>
+<div class="highlight"><pre><span class="nt">&lt;div&gt;</span>{{sprintf (i18n.ngettext &quot;%d cat&quot; &quot;%d cats&quot; much) much }}<span class="nt">&lt;/div&gt;</span>
 </pre></div>
           </section>
       

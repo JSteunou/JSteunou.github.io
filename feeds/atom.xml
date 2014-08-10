@@ -89,6 +89,9 @@
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;initConfig&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
     &lt;span class="nx"&gt;jspot&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
         &lt;span class="nx"&gt;myCoolProject&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="nx"&gt;options&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+                &lt;span class="nx"&gt;keyword&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;i18n&amp;#39;&lt;/span&gt;
+            &lt;span class="p"&gt;},&lt;/span&gt;
             &lt;span class="nx"&gt;files&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
                 &lt;span class="s1"&gt;&amp;#39;locales&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;src/**/*.js&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
             &lt;span class="p"&gt;}&lt;/span&gt;            
@@ -100,6 +103,7 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
+&lt;p&gt;&lt;em&gt;Side note: I'm using the keyword option because the jspot default keyword is gettext, which is pretty standard. jspot is looking for keyword(), keyword.gettext(), keyword.ngettext(), ... calls. But I prefer to not named my Jed instance gettext because it can be confusing.&lt;/em&gt;&lt;/p&gt;
 &lt;p&gt;If your application contains a call to gettext like this&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nx"&gt;i18n&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;gettext&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Hello World!&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
@@ -180,13 +184,13 @@
 &lt;/blockquote&gt;
 &lt;p&gt;Sure you can!&lt;/p&gt;
 &lt;p&gt;Supposing &lt;code&gt;i18n&lt;/code&gt; is your Jed instance. Add a helper like this:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nx"&gt;Handlebars&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;registerHelper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;gettext&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;context&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nx"&gt;Handlebars&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;registerHelper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;i18n.gettext&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;context&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="c1"&gt;// arguments = in template params + a handlebars hash&lt;/span&gt;
     &lt;span class="c1"&gt;// this = in template context&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;i18n&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;gettext&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;i18n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;Array&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;prototype&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;slice&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;call&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;arguments&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;arguments&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;length&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)));&lt;/span&gt;
 &lt;span class="p"&gt;});&lt;/span&gt;
 
-&lt;span class="nx"&gt;Handlebars&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;registerHelper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;gettext.ngettext&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+&lt;span class="nx"&gt;Handlebars&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;registerHelper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;i18n.ngettext&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
     &lt;span class="c1"&gt;// arguments = in template params + a handlebars hash&lt;/span&gt;
     &lt;span class="c1"&gt;// this = in template context&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;i18n&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;ngettext&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;i18n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;Array&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;prototype&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;slice&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;call&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;arguments&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;arguments&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;length&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)));&lt;/span&gt;
@@ -195,8 +199,8 @@
 
 
 &lt;p&gt;Use it:&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;&amp;lt;div&amp;gt;&lt;/span&gt;{{gettext &amp;quot;I&amp;#39;m singular&amp;quot; }}&lt;span class="nt"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
-&lt;span class="nt"&gt;&amp;lt;div&amp;gt;&lt;/span&gt;{{gettext.ngettext &amp;quot;cat&amp;quot; &amp;quot;cats&amp;quot; much }}&lt;span class="nt"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;&amp;lt;div&amp;gt;&lt;/span&gt;{{i18n.gettext &amp;quot;I&amp;#39;m singular&amp;quot; }}&lt;span class="nt"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;div&amp;gt;&lt;/span&gt;{{i18n.ngettext &amp;quot;cat&amp;quot; &amp;quot;cats&amp;quot; much }}&lt;span class="nt"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
@@ -204,6 +208,9 @@
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;initConfig&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
     &lt;span class="nx"&gt;jspot&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
         &lt;span class="nx"&gt;myCoolProject&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="nx"&gt;options&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+                &lt;span class="nx"&gt;keyword&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;i18n&amp;#39;&lt;/span&gt;
+            &lt;span class="p"&gt;},&lt;/span&gt;
             &lt;span class="nx"&gt;files&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
                 &lt;span class="s1"&gt;&amp;#39;locales&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;src/**/*.js&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;src/**/*.hbs&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
             &lt;span class="p"&gt;}&lt;/span&gt;            
@@ -236,7 +243,7 @@
 &lt;p&gt;Translators will see &lt;code&gt;I have %d toasters.&lt;/code&gt; as the plural key for this entry and will have to let the &lt;code&gt;%d&lt;/code&gt; but can put it anywhere in the sentence. This is useful because some language do not have the same words order than English.
 You can also use positional syntax if you have more than one number in your sentence and care about order in other languages. http://www.diveintojavascript.com/projects/javascript-sprintf&lt;/p&gt;
 &lt;p&gt;Moreover, you can do the same into Handlebars, thanks to Handlebars sub-expressions. Supposing you had registered a &lt;em&gt;sprintf&lt;/em&gt; helper&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;&amp;lt;div&amp;gt;&lt;/span&gt;{{sprintf (gettext.ngettext &amp;quot;%d cat&amp;quot; &amp;quot;%d cats&amp;quot; much) much }}&lt;span class="nt"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;&amp;lt;div&amp;gt;&lt;/span&gt;{{sprintf (i18n.ngettext &amp;quot;%d cat&amp;quot; &amp;quot;%d cats&amp;quot; much) much }}&lt;span class="nt"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;</summary><category term="javascript"></category><category term="i18n"></category></entry><entry><title>Browserify, why and how?</title><link href="http://www.jeromesteunou.net/browserify-why-and-how.html" rel="alternate"></link><updated>2014-03-16T00:00:00+01:00</updated><author><name>Jérôme Steunou</name></author><id>tag:www.jeromesteunou.net,2014-03-16:browserify-why-and-how.html</id><summary type="html">&lt;p&gt;In this first article of &lt;a href="recipe-for-marionette-handlebars-browserify-grunt.html"&gt;my series on marionetteify&lt;/a&gt;, I will go through the why I choose Browserify over RequireJS and how using it.&lt;/p&gt;
 &lt;h2&gt;NPM: Node Packaged Modules&lt;/h2&gt;
 &lt;p&gt;A little parenthesis on &lt;code&gt;npm&lt;/code&gt;. When you have big project, you have a big &lt;em&gt;vendors&lt;/em&gt; folder. And it is painful to keep those libraries up to date. That is why in a lot of environment you have a package manager. JavaScript got none a while ago. But with NodeJS comes &lt;a href="https://www.npmjs.org"&gt;npm&lt;/a&gt;, then &lt;a href="http://bower.io/"&gt;bower&lt;/a&gt; for the front-end trying to mimic npm. At this time, npm could not easily be used for front-end development because there was no tools handling CommonJS alike modules, only AMD. Too bad, because I find npm more powerful, acting like a real package manager with a repository while can also consume github and local files. &lt;a href="http://browserify.org/"&gt;Browserify&lt;/a&gt; was the solution. It plays by default very well with node modules, handle by npm. This couple is like an evidence.&lt;/p&gt;
