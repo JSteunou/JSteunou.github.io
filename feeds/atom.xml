@@ -170,7 +170,7 @@
 
 &lt;p&gt;The &lt;code&gt;format: 'jed'&lt;/code&gt; option matters because it will wrap the generated object into jed options. With this you will just have to write &lt;code&gt;new Jed(myCatalog)&lt;/code&gt; instead of &lt;code&gt;new Jed({domain: 'myDomain', locale_data: MyCatalog})&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;About how to load the catalog, I will leave this to what you prefer. You can &lt;code&gt;var frCatalog = require('./locales/fr');&lt;/code&gt; if you are using CommonJS syntax, or &lt;code&gt;define['json!./locales/fr.json', ...], frCatalog, ...&lt;/code&gt; if you are using AMD syntax. Or just use ajax if you are not really in modules.&lt;/p&gt;
-&lt;p&gt;That's it! I think if you are looking at the schema above, the circle is closed know.&lt;/p&gt;
+&lt;p&gt;That's it! I think if you are looking at the schema above, the circle is complete by now.&lt;/p&gt;
 &lt;p&gt;&lt;span class="center"&gt;
 &lt;img alt="gettextend" src="http://www.jeromesteunou.net/static/images/gettext_end.png" title="gettext end scheme" /&gt;
 &lt;/span&gt;&lt;/p&gt;
