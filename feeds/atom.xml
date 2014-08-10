@@ -5,7 +5,7 @@
 &lt;p&gt;I hope this tutorial could help a lot and make developers use internationalization everywhere without fear. &lt;/p&gt;
 &lt;h2&gt;Big picture&lt;/h2&gt;
 &lt;h3&gt;What is internationalization?&lt;/h3&gt;
-&lt;p&gt;I will just quote wikipedia, because it sum it up very well:&lt;/p&gt;
+&lt;p&gt;I will just quote &lt;a href="http://en.wikipedia.org/wiki/Internationalization_and_localization"&gt;Wikipedia&lt;/a&gt;, because it sum it up very well:&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Internationalization is the process of designing a software application so that it can potentially be adapted to various languages and regions without engineering changes. Localization is the process of adapting internationalized software for a specific region or language by adding locale-specific components and translating text.&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -29,7 +29,7 @@
 &lt;/blockquote&gt;
 &lt;p&gt;Localization is often see as l10n. Again... lazy is good :)&lt;/p&gt;
 &lt;h3&gt;What is gettext?&lt;/h3&gt;
-&lt;p&gt;Again, thank you wikipedia&lt;/p&gt;
+&lt;p&gt;Again, thank you &lt;a href="http://en.wikipedia.org/wiki/Gettext"&gt;Wikipedia&lt;/a&gt;&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;gettext is an internationalization and localization (i18n) system commonly used for writing multilingual programs on Unix-like computer operating systems. The most commonly used implementation of gettext is GNU gettext, released by the GNU Project in 1995.&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -127,7 +127,7 @@
 &lt;h3&gt;Generate catalogs and keeping them updated&lt;/h3&gt;
 &lt;p&gt;You had seen how Jed exposes the gettext API and uses catalogs. You had seen how jspot creates the dictionary &lt;em&gt;pot&lt;/em&gt; file. One more step, how to generates catalogs:&lt;/p&gt;
 &lt;p&gt;Two way, the easy way, or the... Nah. Both are easy, depending on what you are use to.&lt;/p&gt;
-&lt;p&gt;If you remember, and read wikipedia, gettext has a well known implementation as GNU Gettext which comes with Linux. In fact, in most Linux distributions we have commands likes &lt;code&gt;msginit&lt;/code&gt;, &lt;code&gt;msgmerge&lt;/code&gt;, ... These are gettext commands. &lt;code&gt;msginit&lt;/code&gt; is for creating a new catalog and &lt;code&gt;msgmerge&lt;/code&gt; is for updating a catalog with all new entries from an updated dictionary.&lt;/p&gt;
+&lt;p&gt;If you remember, and read Wikipedia, gettext has a well known implementation as GNU Gettext which comes with Linux. In fact, in most Linux distributions we have commands likes &lt;code&gt;msginit&lt;/code&gt;, &lt;code&gt;msgmerge&lt;/code&gt;, ... These are gettext commands. &lt;code&gt;msginit&lt;/code&gt; is for creating a new catalog and &lt;code&gt;msgmerge&lt;/code&gt; is for updating a catalog with all new entries from an updated dictionary.&lt;/p&gt;
 &lt;p&gt;But I will told you about the graphical way, which allow me to show you how to translate too :)&lt;/p&gt;
 &lt;p&gt;The tool I'm using to create and manage my catalogs is &lt;a href="http://poedit.net/"&gt;POEdit&lt;/a&gt;. It's free, open source, and runs on different OS.&lt;/p&gt;
 &lt;p&gt;Launch it, and go in file &amp;gt; New from pot file (or a thing like that). Select your dictionary previously created and fill in some information. Do not forget to fill in the &lt;a href="http://docs.translatehouse.org/projects/localization-guide/en/latest/l10n/pluralforms.html?id=l10n/pluralforms"&gt;correct plural form&lt;/a&gt; for you catalog.&lt;/p&gt;

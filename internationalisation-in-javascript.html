@@ -41,7 +41,7 @@
 <p>I hope this tutorial could help a lot and make developers use internationalization everywhere without fear. </p>
 <h2>Big picture</h2>
 <h3>What is internationalization?</h3>
-<p>I will just quote wikipedia, because it sum it up very well:</p>
+<p>I will just quote <a href="http://en.wikipedia.org/wiki/Internationalization_and_localization">Wikipedia</a>, because it sum it up very well:</p>
 <blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
 <p>Internationalization is the process of designing a software application so that it can potentially be adapted to various languages and regions without engineering changes. Localization is the process of adapting internationalized software for a specific region or language by adding locale-specific components and translating text.</p>
 </blockquote>
@@ -65,7 +65,7 @@
 </blockquote>
 <p>Localization is often see as l10n. Again... lazy is good :)</p>
 <h3>What is gettext?</h3>
-<p>Again, thank you wikipedia</p>
+<p>Again, thank you <a href="http://en.wikipedia.org/wiki/Gettext">Wikipedia</a></p>
 <blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
 <p>gettext is an internationalization and localization (i18n) system commonly used for writing multilingual programs on Unix-like computer operating systems. The most commonly used implementation of gettext is GNU gettext, released by the GNU Project in 1995.</p>
 </blockquote>
@@ -163,7 +163,7 @@
 <h3>Generate catalogs and keeping them updated</h3>
 <p>You had seen how Jed exposes the gettext API and uses catalogs. You had seen how jspot creates the dictionary <em>pot</em> file. One more step, how to generates catalogs:</p>
 <p>Two way, the easy way, or the... Nah. Both are easy, depending on what you are use to.</p>
-<p>If you remember, and read wikipedia, gettext has a well known implementation as GNU Gettext which comes with Linux. In fact, in most Linux distributions we have commands likes <code>msginit</code>, <code>msgmerge</code>, ... These are gettext commands. <code>msginit</code> is for creating a new catalog and <code>msgmerge</code> is for updating a catalog with all new entries from an updated dictionary.</p>
+<p>If you remember, and read Wikipedia, gettext has a well known implementation as GNU Gettext which comes with Linux. In fact, in most Linux distributions we have commands likes <code>msginit</code>, <code>msgmerge</code>, ... These are gettext commands. <code>msginit</code> is for creating a new catalog and <code>msgmerge</code> is for updating a catalog with all new entries from an updated dictionary.</p>
 <p>But I will told you about the graphical way, which allow me to show you how to translate too :)</p>
 <p>The tool I'm using to create and manage my catalogs is <a href="http://poedit.net/">POEdit</a>. It's free, open source, and runs on different OS.</p>
 <p>Launch it, and go in file &gt; New from pot file (or a thing like that). Select your dictionary previously created and fill in some information. Do not forget to fill in the <a href="http://docs.translatehouse.org/projects/localization-guide/en/latest/l10n/pluralforms.html?id=l10n/pluralforms">correct plural form</a> for you catalog.</p>
