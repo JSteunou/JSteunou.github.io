@@ -1,5 +1,243 @@
 <?xml version="1.0" encoding="utf-8"?>
-<feed xmlns="http://www.w3.org/2005/Atom"><title>Jérôme Steunou</title><link href="http://www.jeromesteunou.net/" rel="alternate"></link><link href="http://www.jeromesteunou.net/feeds/atom.xml" rel="self"></link><id>http://www.jeromesteunou.net/</id><updated>2014-03-16T00:00:00+01:00</updated><entry><title>Browserify, why and how?</title><link href="http://www.jeromesteunou.net/browserify-why-and-how.html" rel="alternate"></link><updated>2014-03-16T00:00:00+01:00</updated><author><name>Jérôme Steunou</name></author><id>tag:www.jeromesteunou.net,2014-03-16:browserify-why-and-how.html</id><summary type="html">&lt;p&gt;In this first article of &lt;a href="recipe-for-marionette-handlebars-browserify-grunt.html"&gt;my series on marionetteify&lt;/a&gt;, I will go through the why I choose Browserify over RequireJS and how using it.&lt;/p&gt;
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Jérôme Steunou</title><link href="http://www.jeromesteunou.net/" rel="alternate"></link><link href="http://www.jeromesteunou.net/feeds/atom.xml" rel="self"></link><id>http://www.jeromesteunou.net/</id><updated>2014-08-10T00:00:00+02:00</updated><entry><title>Internationalization in JavaScript</title><link href="http://www.jeromesteunou.net/internationalisation-in-javascript.html" rel="alternate"></link><updated>2014-08-10T00:00:00+02:00</updated><author><name>Jérôme Steunou</name></author><id>tag:www.jeromesteunou.net,2014-08-10:internationalisation-in-javascript.html</id><summary type="html">&lt;p&gt;I just released &lt;a href="https://github.com/JSteunou/grunt-jspot"&gt;grunt-jspot&lt;/a&gt; yesterday, a simple grunt task for &lt;a href="https://github.com/praekelt/jspot"&gt;jspot&lt;/a&gt;, an extraordinary gettext extractor tool for JavaScript.&lt;/p&gt;
+&lt;p&gt;jspot is like the missing piece I was looking for so long to do internationalization in JavaScript. I mean, real internationalization, using standard and stuff.&lt;/p&gt;
+&lt;p&gt;But talking about it around make me understand internationalization is not well understand and seems like a very difficult beast to harness for JavaScript application.&lt;/p&gt;
+&lt;p&gt;I hope this tutorial could help a lot and make developers use internationalization a lot without scratching head. &lt;/p&gt;
+&lt;h2&gt;Big picture&lt;/h2&gt;
+&lt;h3&gt;What is internationalization?&lt;/h3&gt;
+&lt;p&gt;I will just quote wikipedia, because it sum it up very well:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Internationalization is the process of designing a software application so that it can potentially be adapted to various languages and regions without engineering changes. Localization is the process of adapting internationalized software for a specific region or language by adding locale-specific components and translating text.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;So you will design your application in a way it can display&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Hello world!&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;or&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Salut tout le monde !&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Internationalization is often see as &lt;em&gt;i18n&lt;/em&gt;. Yeah, lazy developers that can not write a long word :p&lt;/p&gt;
+&lt;h3&gt;What is the difference with localization?&lt;/h3&gt;
+&lt;p&gt;It's more about adapting your format to regional specifications. Date format, currency, numbers are good example.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;$9,999.99&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;or&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;99 999,99 $&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Localization is often see as l10n. Again... lazy is good :)&lt;/p&gt;
+&lt;h3&gt;What is gettext?&lt;/h3&gt;
+&lt;p&gt;Again, thank you wikipedia&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;gettext is an internationalization and localization (i18n) system commonly used for writing multilingual programs on Unix-like computer operating systems. The most commonly used implementation of gettext is GNU gettext, released by the GNU Project in 1995.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Also it is very common and standard so it's very interesting to use it. Translators know how to deal with files it generates and it has nice features like &lt;em&gt;pluralization&lt;/em&gt;.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Wow, why do I have to care about pluralization?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Because plurals do not follow the same rules for each language! For example, in English 0 (zero) is plural, whereas it is singular in French. Irish could have 4 plurals form. That's why good pluralization feature is very important.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Is gettext gonna translate for me?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Hell no! Gettext will expose a standard so all your application words and sentences could be together in a &lt;em&gt;dictionary&lt;/em&gt;. Then translators will create a &lt;em&gt;catalog&lt;/em&gt; per language you wanna expose into your application and your application will read those catalogs with the gettext API.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Show me how it works in a software!&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Ok, first, the big picture, please dont run away, it's easier than it's look like ;)&lt;/p&gt;
+&lt;p&gt;&lt;img alt="gettext" src="http://www.jeromesteunou.net/static/images/gettext.png" title="gettext scheme" /&gt;&lt;/p&gt;
+&lt;h2&gt;Concrete example in JavaScript&lt;/h2&gt;
+&lt;h3&gt;Using a gettext JavaScript implementation&lt;/h3&gt;
+&lt;p&gt;Looking at the presentation above, you see you need a JavaScript implementation of gettext. I will use &lt;a href="http://slexaxton.github.io/Jed/"&gt;Jed&lt;/a&gt;. But you are free to use whatever you like. That's the beauty of this system, each tool at each step can be changed by another tool if you want.&lt;/p&gt;
+&lt;p&gt;Remember, the gettext implementation will need to load a catalog and will expose a gettext API.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="c1"&gt;// I will show you later how to really load a catalog&lt;/span&gt;
+&lt;span class="c1"&gt;// + some more specific cases&lt;/span&gt;
+&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;myFrenchCatalog&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;fr&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;i18n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;Jed&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;myFrenchCatalog&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;translation&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;i18n&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;gettext&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Hello world!&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="nx"&gt;translation&lt;/span&gt; &lt;span class="o"&gt;===&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;Salut tout le monde !&amp;#39;&lt;/span&gt; &lt;span class="c1"&gt;// true&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You are now using gettext!&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;myFrenchCatalog&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;fr&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+
+&lt;span class="c1"&gt;// no translation, english selected&lt;/span&gt;
+&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;i18n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;Jed&lt;/span&gt;&lt;span class="p"&gt;({});&lt;/span&gt;
+&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;translation&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;i18n&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;ngettext&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;apple&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;apples&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="nx"&gt;translation&lt;/span&gt; &lt;span class="o"&gt;===&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;apples&amp;#39;&lt;/span&gt; &lt;span class="c1"&gt;// true&lt;/span&gt;
+
+&lt;span class="c1"&gt;// fr translation, french selected&lt;/span&gt;
+&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;i18n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;Jed&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;myFrenchCatalog&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;translation&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;i18n&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;ngettext&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;apple&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;apples&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="nx"&gt;translation&lt;/span&gt; &lt;span class="o"&gt;===&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;pomme&amp;#39;&lt;/span&gt; &lt;span class="c1"&gt;// true&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;You are now using pluralization!&lt;/p&gt;
+&lt;p&gt;Ok, now you just have seen the right part of the schema above. You know how to start a gettext implementation and how to use the gettext API in your JavaScript application. (not all of it, but the necessary :p)&lt;/p&gt;
+&lt;h3&gt;Using a gettext extractor to create your dictionary&lt;/h3&gt;
+&lt;p&gt;I will suppose you know how to use &lt;a href="http://gruntjs.com"&gt;Grunt&lt;/a&gt; inside your project. We will use the &lt;a href="https://github.com/praekelt/jspot"&gt;jspot&lt;/a&gt; gettext extractor with &lt;a href="https://github.com/JSteunou/grunt-jspot"&gt;grunt-jspot&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;If you are not using Grunt, jspot can also be used in JavaScript or command line.&lt;/p&gt;
+&lt;p&gt;After the classic &lt;code&gt;npm install grunt-jspot&lt;/code&gt;, in your project's Gruntfile, add a section named jspot to the data object passed into grunt.initConfig().&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;initConfig&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
+    &lt;span class="nx"&gt;jspot&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="nx"&gt;myCoolProject&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="nx"&gt;files&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+                &lt;span class="s1"&gt;&amp;#39;locales&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;src/**/*.js&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+            &lt;span class="p"&gt;}&lt;/span&gt;            
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;});&lt;/span&gt;
+
+&lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;loadNpmTasks&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;grunt-jspot&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;If your application contains a call to gettext like this&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nx"&gt;i18n&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;gettext&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;Hello World!&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Running &lt;code&gt;grunt jspot&lt;/code&gt; generate you a file &lt;code&gt;locales/messages.pot&lt;/code&gt; and it certainly looks like&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;msgid&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="n"&gt;msgstr&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;span class="s"&gt;&amp;quot;POT-Creation-Date: 2014-08-09 05:32:+0000&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;
+&lt;span class="s"&gt;&amp;quot;Project-Id-Version: PACKAGE VERSION&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;
+&lt;span class="s"&gt;&amp;quot;Language-Team: LANGUAGE &amp;lt;LL@li.org&amp;gt;&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;
+&lt;span class="s"&gt;&amp;quot;Language: &lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;
+&lt;span class="s"&gt;&amp;quot;MIME-Version: 1.0&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;
+&lt;span class="s"&gt;&amp;quot;Content-Type: text/plain; charset=utf-8&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;
+&lt;span class="s"&gt;&amp;quot;Content-Transfer-Encoding: 8bit&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;
+&lt;span class="s"&gt;&amp;quot;PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE&lt;/span&gt;&lt;span class="se"&gt;\n&lt;/span&gt;&lt;span class="s"&gt;&amp;quot;&lt;/span&gt;
+
+&lt;span class="cp"&gt;#: app.js:1&lt;/span&gt;
+&lt;span class="n"&gt;msgid&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;Hello World!&amp;quot;&lt;/span&gt;
+&lt;span class="n"&gt;msgstr&lt;/span&gt; &lt;span class="s"&gt;&amp;quot;&amp;quot;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;That's it. Your dictionary is ready. And yeah it's what we called a &lt;strong&gt;pot&lt;/strong&gt; file. Please do not edit it manually. Like never! Its format is very important.&lt;/p&gt;
+&lt;h3&gt;Generate catalogs and keeping them updated&lt;/h3&gt;
+&lt;p&gt;You had seen how Jed exposes the gettext API and uses catalogs. You had seen how jspot creates the dictionary &lt;em&gt;pot&lt;/em&gt; file. One more step.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;How to generates catalogs?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Two way, the easy way, or the... Nah. Both are easy, depending on what you are use to.&lt;/p&gt;
+&lt;p&gt;If you remember, and read wikipedia, gettext is also known as GNU Gettext and comes with Linux. In fact, in most Linux distributions we have commands likes &lt;code&gt;msginit&lt;/code&gt;, &lt;code&gt;msgmerge&lt;/code&gt;, ... These are gettext commands. &lt;code&gt;msginit&lt;/code&gt; is for creating a new catalog and &lt;code&gt;msgmerge&lt;/code&gt; is for updating a catalog with all new entries from an updated dictionary.&lt;/p&gt;
+&lt;p&gt;But I will told you about the graphical way, which allow me to show you how to translate too :)&lt;/p&gt;
+&lt;p&gt;The tool I'm using to create and manage my catalogs is &lt;a href="http://poedit.net/"&gt;POEdit&lt;/a&gt;. It's free, open source, and runs on different OS.&lt;/p&gt;
+&lt;p&gt;Launch it, and go in file &amp;gt; New from pot file (or a thing like that). Select your dictionary previously created and fill in some information. Do not miss to fill in the correct plural form for you catalog.&lt;/p&gt;
+&lt;p&gt;// TODO insert image&lt;/p&gt;
+&lt;p&gt;There is also a catalog manager, which help you to see your catalog per project, update all at once if the dictionary was updated and how you catalog status (green: translation = 100%).&lt;/p&gt;
+&lt;p&gt;// TODO insert image&lt;/p&gt;
+&lt;p&gt;Selecting a catalog you can edit it and update translations. For a translations you can fill the singular and the plural form, without bothering about the &lt;em&gt;when&lt;/em&gt; use plural, gettext will handle it for you.&lt;/p&gt;
+&lt;p&gt;// TODO insert image&lt;/p&gt;
+&lt;p&gt;Now you know about creating and updating catalogs but also translate your application!&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;Hey, one last thing, catalogs are .po or .mo files. Jed only read JSON!&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;True! I told you I will show you how to load catalogs in Jed&lt;/p&gt;
+&lt;h3&gt;Last step! Convert your catalogs into JSON&lt;/h3&gt;
+&lt;p&gt;This one is so easy. &lt;a href="https://github.com/rockykitamura/grunt-po2json"&gt;grunt-po2json&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;And again, if you are not using Grunt, you can just use &lt;a href="https://github.com/mikeedwards/po2json"&gt;po2json&lt;/a&gt; directly or jspot which include po2json too.&lt;/p&gt;
+&lt;p&gt;After the classic &lt;code&gt;npm install grunt-po2json&lt;/code&gt;, in your project's Gruntfile, add a section named po2json to the data object passed into grunt.initConfig().&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;initConfig&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
+    &lt;span class="nx"&gt;po2json&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="nx"&gt;myCoolProject&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="nx"&gt;src&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;locales/*.po&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;],&lt;/span&gt;
+            &lt;span class="nx"&gt;dest&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;locales/&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+            &lt;span class="nx"&gt;options&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+                &lt;span class="nx"&gt;pretty&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="kc"&gt;true&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt;
+                &lt;span class="nx"&gt;format&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;jed&amp;#39;&lt;/span&gt;
+            &lt;span class="p"&gt;}&lt;/span&gt;
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;});&lt;/span&gt;
+
+&lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;loadNpmTasks&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;grunt-po2json&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;The &lt;code&gt;format: 'jed'&lt;/code&gt; option matters because it will wrap the generated object in jed options you will just have to write &lt;code&gt;new Jed(myCatalog)&lt;/code&gt; instead of &lt;code&gt;new Jed({domain: 'myDomain', locale_data: MyCatalog})&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;About how to load the catalog, I will leave this to what you prefer. You can &lt;code&gt;var frCatalog = require('./locales/fr');&lt;/code&gt; if you are using CommonJS syntax, or &lt;code&gt;define['json!./locales/fr.json', ...], frCatalog, ...&lt;/code&gt; if you are using AMD syntax. Or just use ajax if you are not really in modules.&lt;/p&gt;
+&lt;p&gt;That's it! I think if you are looking at the schema above, the circle is closed know.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="gettextend" src="http://www.jeromesteunou.net/static/images/gettext_end.png" title="gettext end scheme" /&gt;&lt;/p&gt;
+&lt;h2&gt;Bonus&lt;/h2&gt;
+&lt;blockquote&gt;
+&lt;p&gt;I'm using Handlebars, can I extract gettext string from it with jspot?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Sure you can!&lt;/p&gt;
+&lt;p&gt;Add a helper like this, supposing &lt;code&gt;i18n&lt;/code&gt; is your Jed instance.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nx"&gt;Handlebars&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;registerHelper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;gettext&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;context&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="c1"&gt;// arguments = in template param + a handlebars hash&lt;/span&gt;
+    &lt;span class="c1"&gt;// this = in template context&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;i18n&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;gettext&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;i18n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;Array&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;prototype&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;slice&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;call&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;arguments&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;arguments&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;length&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)));&lt;/span&gt;
+&lt;span class="p"&gt;});&lt;/span&gt;
+
+&lt;span class="nx"&gt;Handlebars&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;registerHelper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;gettext.ngettext&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+    &lt;span class="c1"&gt;// arguments = in template param + a handlebars hash&lt;/span&gt;
+    &lt;span class="c1"&gt;// this = in template context&lt;/span&gt;
+    &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;i18n&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;ngettext&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;i18n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;Array&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;prototype&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;slice&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;call&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;arguments&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;arguments&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;length&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)));&lt;/span&gt;
+&lt;span class="p"&gt;});&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;&amp;lt;div&amp;gt;&lt;/span&gt;{{gettext &amp;quot;I&amp;#39;m singular&amp;quot; }}&lt;span class="nt"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;span class="nt"&gt;&amp;lt;div&amp;gt;&lt;/span&gt;{{gettext.ngettext &amp;quot;cat&amp;quot; &amp;quot;cats&amp;quot; much }}&lt;span class="nt"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;And configure your grunt task to add Handlebars files. Those files must end with &lt;code&gt;.hbs&lt;/code&gt;. (This will be configurable very soon).&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;initConfig&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
+    &lt;span class="nx"&gt;jspot&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+        &lt;span class="nx"&gt;myCoolProject&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+            &lt;span class="nx"&gt;files&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
+                &lt;span class="s1"&gt;&amp;#39;locales&amp;#39;&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="p"&gt;[&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;src/**/*.js&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;src/**/*.hbs&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;]&lt;/span&gt;
+            &lt;span class="p"&gt;}&lt;/span&gt;            
+        &lt;span class="p"&gt;}&lt;/span&gt;
+    &lt;span class="p"&gt;}&lt;/span&gt;
+&lt;span class="p"&gt;});&lt;/span&gt;
+
+&lt;span class="nx"&gt;grunt&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;loadNpmTasks&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;grunt-jspot&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;blockquote&gt;
+&lt;p&gt;I'm using Underscorejs template, can I extract gettext string from it with jspot?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Not yet! But jspot can extract string from Javascript very well. It also can have external extractors attached to its extractor part. As Underscore compiles templates in pure JavaScript with source attached, a &lt;code&gt;jspot-underscore-extractor&lt;/code&gt; will land very soon :)&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;I'm using XXX template engine, can I extract gettext string from it with jspot?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Not yet! Like for Underscore template, if it generate pure JavaScript, an external extractor should be easy to write. Contribution into &lt;a href="https://github.com/JSteunou/grunt-jspot"&gt;grunt-jspot&lt;/a&gt; and &lt;a href="https://github.com/praekelt/jspot"&gt;jspot&lt;/a&gt; are welcome.&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;How can I handle numbers in plural sentences?&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;With the &lt;em&gt;sprintf&lt;/em&gt; tool. An implementation exists for JavaScript and you have it directly in Jed: &lt;code&gt;Jed.sprintf&lt;/code&gt;.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;numToasters&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="mi"&gt;3&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
+&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;translation&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;Jed&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;sprintf&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;i18n&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;ngettext&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;I have one toaster.&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;I have %d toasters.&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;numToasters&lt;/span&gt;&lt;span class="p"&gt;),&lt;/span&gt; &lt;span class="nx"&gt;numToasters&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
+&lt;span class="c1"&gt;// I have 3 toasters&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Translators will see &lt;code&gt;I have %d toasters.&lt;/code&gt; in plural key for these entry and will have to let the &lt;code&gt;%d&lt;/code&gt; but can put it anywhere in the sentence. This is useful because some language do not have the same word order than English.
+You can also use postitional syntax if you have more than one number in your sentence and care about order in other languages. http://www.diveintojavascript.com/projects/javascript-sprintf&lt;/p&gt;
+&lt;p&gt;Moreover, you can do the same into Handlebars, supposing you register a &lt;em&gt;sprintf&lt;/em&gt; helper, thanks to Handlebars sub-expressions.&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;&amp;lt;div&amp;gt;&lt;/span&gt;{{sprintf (gettext.ngettext &amp;quot;one cat&amp;quot; &amp;quot;%d cats&amp;quot; much) much }}&lt;span class="nt"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;</summary><category term="javascript"></category><category term="i18n"></category></entry><entry><title></title><link href="http://www.jeromesteunou.net/cordova-draft.html" rel="alternate"></link><updated>2014-03-31T00:00:00+02:00</updated><author><name>Jérôme Steunou</name></author><id>tag:www.jeromesteunou.net,2014-03-31:cordova-draft.html</id><summary type="html">&lt;p&gt;installer (ant) et open jdk&lt;/p&gt;
+&lt;p&gt;installer android sdk http://www.android-dev.fr/installation-du-sdk-android-sous-ubuntu&lt;/p&gt;
+&lt;p&gt;ne pas le déplacer après update &amp;amp; attention 5Go&lt;/p&gt;
+&lt;p&gt;ajouter tools dans le PATH
+update
+puis ajouter platform-tools dans le PATH (peut être possible avant fix error adb)&lt;/p&gt;
+&lt;p&gt;android avd pour ajouter au moins un avd&lt;/p&gt;
+&lt;p&gt;puis cordova&lt;/p&gt;
+&lt;p&gt;puis paquets manquant&lt;/p&gt;
+&lt;p&gt;voir si dans doc Cordova mais besoin de lib32 sous Ubuntu 64bits http://stackoverflow.com/questions/19523502/androids-aapt-not-running-on-64-bit-ubuntu-13-10-no-ia32-libs-how-can-i-fix&lt;/p&gt;
+&lt;p&gt;fix error libGL.so http://learnedstuffs.wordpress.com/2012/07/17/fixing-ubuntu-error-failed-to-load-libgl-so/&lt;/p&gt;</summary><category term="cordova"></category></entry><entry><title>Browserify, why and how?</title><link href="http://www.jeromesteunou.net/browserify-why-and-how.html" rel="alternate"></link><updated>2014-03-16T00:00:00+01:00</updated><author><name>Jérôme Steunou</name></author><id>tag:www.jeromesteunou.net,2014-03-16:browserify-why-and-how.html</id><summary type="html">&lt;p&gt;In this first article of &lt;a href="recipe-for-marionette-handlebars-browserify-grunt.html"&gt;my series on marionetteify&lt;/a&gt;, I will go through the why I choose Browserify over RequireJS and how using it.&lt;/p&gt;
 &lt;h2&gt;NPM: Node Packaged Modules&lt;/h2&gt;
 &lt;p&gt;A little parenthesis on &lt;code&gt;npm&lt;/code&gt;. When you have big project, you have a big &lt;em&gt;vendors&lt;/em&gt; folder. And it is painful to keep those libraries up to date. That is why in a lot of environment you have a package manager. JavaScript got none a while ago. But with NodeJS comes &lt;a href="https://www.npmjs.org"&gt;npm&lt;/a&gt;, then &lt;a href="http://bower.io/"&gt;bower&lt;/a&gt; for the front-end trying to mimic npm. At this time, npm could not easily be used for front-end development because there was no tools handling CommonJS alike modules, only AMD. Too bad, because I find npm more powerful, acting like a real package manager with a repository while can also consume github and local files. &lt;a href="http://browserify.org/"&gt;Browserify&lt;/a&gt; was the solution. It plays by default very well with node modules, handle by npm. This couple is like an evidence.&lt;/p&gt;
 &lt;h2&gt;Browserify&lt;/h2&gt;
@@ -191,92 +429,4 @@
 &lt;li&gt;Ça parle de ... ? (libre ? python ? &lt;s&gt;php&lt;/s&gt; troll ? ...)&lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Et voilà vous avez votre catégorie et vos tags.&lt;/p&gt;
-&lt;p&gt;Mais de rien.&lt;/p&gt;</summary><category term="blog"></category></entry><entry><title>Structurer son application Backbone.js / Marionette.js (part. 1)</title><link href="http://www.jeromesteunou.net/structurer-son-app-backbone.js-marionette.js-fr.html" rel="alternate"></link><updated>2013-07-21T00:00:00+02:00</updated><author><name>Jérôme Steunou</name></author><id>tag:www.jeromesteunou.net,2013-07-21:structurer-son-app-backbone.js-marionette.js-fr.html</id><summary type="html">&lt;h2&gt;Comment bien commencer avec Backbone.js / Marionette.js ?&lt;/h2&gt;
-&lt;p&gt;Je vais passer le pourquoi du comment Backbone.js et Marionette.js, qui est pour moi un couple JS qui fonctionne très très bien pour le dev côté front-end. Si vous êtes arrivé ici, je considère que vous en connaissez un minimum sur ces &lt;abbr title="Framework"&gt;FW&lt;/abbr&gt;, au moins les concepts de &lt;code&gt;Model Collection View Router&lt;/code&gt; propres à Backbone.js.&lt;/p&gt;
-&lt;p&gt;Le but de cet article est de vous montrer ce que j'utilise comme structure pour débuter une application avec Marionette.js. Ça vous aidera sûrement pour débuter avec ce framework, bien que la &lt;a href="https://github.com/marionettejs/backbone.marionette/tree/master/docs"&gt;doc officielle&lt;/a&gt; soit déjà pas mal foutue.&lt;/p&gt;
-&lt;h2&gt;Faut-il utiliser Require.js ?&lt;/h2&gt;
-&lt;p&gt;La grande question quand on commence à vouloir structurer son application JavaScript et qu'on veut bien faire, comprendre, comme dans la plupart des tutos bien balèzes. Je suis passé par là, j'ai testé, et finalement j'ai tout pété. &lt;a href="http://en.wikipedia.org/wiki/KISS_principle"&gt;Pourquoi faire compliqué quand on peut faire simple&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;Donc, non vous n'êtes pas obligé : pour une application vraiment grande (mais vraiment hein), vous pouvez commencer à en ressentir le besoin. Un peu comme Gmail qui vous charge d'abord le module pour les mails, puis les contacts, le chat, etc. Mais sur une application Marionette, avec les librairies quivontbien, les classiques jQuery(UI) + 3, 4 librairies JS histoire ne pas ré-inventer la roue, quand vous aurez tout assemblé et minifié, vous n'aurez plus qu'un fichier JS et quelques libs chargées via CDN dans 90% des cas. Donc dans 90% des cas Require.js est inutile.&lt;/p&gt;
-&lt;p&gt;De plus Marionette utilise deux concepts pour vous aider à structurer votre code et instancier l'ensemble : l'&lt;a href="https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.application.md"&gt;application&lt;/a&gt; et les &lt;a href="https://github.com/marionettejs/backbone.marionette/blob/master/docs/marionette.application.module.md"&gt;modules&lt;/a&gt;. Si vous avez fait un peu de Django par exemple, ça vous ne sera pas étranger. L'application sera votre bootstrap, votre chef d'orchestre, alors que vos modules seront en fait vos mini-applications. Donc d'emblée, Marionette vous pousse au &lt;strong&gt;découpage&lt;/strong&gt; et &lt;strong&gt;découplage&lt;/strong&gt;, bien !&lt;/p&gt;
-&lt;h2&gt;L'objet Marionette.Application&lt;/h2&gt;
-&lt;p&gt;Regardons ensemble ce que nous pouvons faire avec :&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;myApp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;Backbone&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;Marionette&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;Application&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;L'instancier... euh ok&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nx"&gt;myApp&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;addInitializer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;options&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
-  &lt;span class="c1"&gt;// do useful stuff here&lt;/span&gt;
-  &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;myView&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;MyView&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;
-    &lt;span class="nx"&gt;model&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt; &lt;span class="nx"&gt;options&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;someModel&lt;/span&gt;
-  &lt;span class="p"&gt;});&lt;/span&gt;
-  &lt;span class="nx"&gt;myApp&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;mainRegion&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;show&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;myView&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;span class="p"&gt;});&lt;/span&gt;
-
-&lt;span class="nx"&gt;myApp&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;addInitializer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;options&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
-  &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;myAppRouter&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-  &lt;span class="nx"&gt;Backbone&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;history&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;start&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-&lt;span class="p"&gt;});&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Ajouter des &lt;code&gt;initializer&lt;/code&gt;... aaah pas mal. C'est simple, mais efficace. Quand votre application démarre, elle appelle les initializer, et dans l'ordre d'ajout s'il vous plaît. Si vous avez des outils, contrôleur, routeur, etc, à initialiser quand l'application se lance, c'est ici, tout simplement.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;Et comment lance-t-on l'application ? Et les &lt;code&gt;options&lt;/code&gt; que je vois dans tes callbacks elles sortent d'où ?&lt;/p&gt;
-&lt;/blockquote&gt;
-&lt;p&gt;Taratataaa, rien de plus simple&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nx"&gt;myApp&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;start&lt;/span&gt;&lt;span class="p"&gt;({&lt;/span&gt;&lt;span class="nx"&gt;foo&lt;/span&gt;&lt;span class="o"&gt;:&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;bar&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;})&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Et pour les cas vraiment complexes où vous auriez un bootstrap par dessus ce bootstrap, vous pouvez même modifier les options juste avant les &lt;code&gt;initializer&lt;/code&gt; ou lancer des actions. &lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nx"&gt;myApp&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;on&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s2"&gt;&amp;quot;initialize:before&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;options&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
-  &lt;span class="nx"&gt;options&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;moreData&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="s2"&gt;&amp;quot;Yo dawg, I heard you like options so I put some options in your options!&amp;quot;&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-&lt;span class="p"&gt;});&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Vous remarquerez la méthode &lt;code&gt;on()&lt;/code&gt; qui sert à inscrire une callback à un événement donné. Vous retrouvez ce principe dans Backbone.js et Marionette.js, ainsi que son &lt;em&gt;inverse&lt;/em&gt; &lt;a href="http://backbonejs.org/#Events-listenTo"&gt;&lt;code&gt;listenTo()&lt;/code&gt;&lt;/a&gt; qui sera souvent plus approprié dans une vue.&lt;/p&gt;
-&lt;p&gt;Vous avez accès à trois d'événements depuis l'application :&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;code&gt;initialize:before&lt;/code&gt; / &lt;code&gt;onInitializeBefore&lt;/code&gt; : levé juste avant que les initializers soient lancé&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;initialize:after&lt;/code&gt; / &lt;code&gt;onInitializeAfter&lt;/code&gt; : levé juste après la fin initializers&lt;/li&gt;
-&lt;li&gt;&lt;code&gt;start&lt;/code&gt; / &lt;code&gt;onStart&lt;/code&gt; : au vrai début de l'application, donc après les initializers, et les événements des initializers.&lt;/li&gt;
-&lt;/ul&gt;
-&lt;h2&gt;Non aux variables globales&lt;/h2&gt;
-&lt;p&gt;Avant de passer à la suite, récapitulons ce que donne notre application, encapsulé dans une &lt;a href="http://en.wikipedia.org/wiki/Immediately-invoked_function_expression"&gt;IIFE&lt;/a&gt; et ajoutée dans un namespace qui sera notre &lt;strong&gt;seule&lt;/strong&gt; variable globale.&lt;/p&gt;
-&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nx"&gt;MyNamespace&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;myApp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;Backbone&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;Marionette&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;_&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;Handlebars&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;etc&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-  &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;myApp&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;Backbone&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;Marionette&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;Application&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-
-  &lt;span class="nx"&gt;myApp&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;addInitializer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;options&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
-    &lt;span class="c1"&gt;// do useful stuff here&lt;/span&gt;
-    &lt;span class="c1"&gt;// like maybe configure Handlebars&lt;/span&gt;
-    &lt;span class="p"&gt;...&lt;/span&gt;
-  &lt;span class="p"&gt;});&lt;/span&gt;
-
-  &lt;span class="nx"&gt;myApp&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;addInitializer&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;options&lt;/span&gt;&lt;span class="p"&gt;){&lt;/span&gt;
-    &lt;span class="c1"&gt;// inside an initializer `this` is the app&lt;/span&gt;
-    &lt;span class="k"&gt;this&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;router&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;MyNamespace&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;Router&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-    &lt;span class="nx"&gt;Backbone&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;history&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;start&lt;/span&gt;&lt;span class="p"&gt;();&lt;/span&gt;
-  &lt;span class="p"&gt;});&lt;/span&gt;
-
-  &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;myApp&lt;/span&gt;&lt;span class="p"&gt;;&lt;/span&gt;
-
-&lt;span class="p"&gt;}(&lt;/span&gt;&lt;span class="nx"&gt;Backbone&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;Marionette&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;_&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;$&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;Handlebars&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;etc&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-
-&lt;span class="nx"&gt;MyNamespace&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;myApp&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;start&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;someOptions&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;/pre&gt;&lt;/div&gt;
-
-
-&lt;p&gt;Ça sera tout pour cette partie. Je vais découper le tuto en 3 ou 4 partie vu le temps que ça me prend.&lt;/p&gt;</summary><category term="javascript"></category><category term="backbone.js"></category><category term="marionette.js"></category></entry><entry><title>Héberger son site sur Dropbox</title><link href="http://www.jeromesteunou.net/heberger-son-site-sur-dropbox-fr.html" rel="alternate"></link><updated>2013-06-27T00:00:00+02:00</updated><author><name>Jérôme Steunou</name></author><id>tag:www.jeromesteunou.net,2013-06-27:heberger-son-site-sur-dropbox-fr.html</id><summary type="html">&lt;p&gt;Quand on veut faire un petit site &lt;strong&gt;statique&lt;/strong&gt; tout simple, qu’on n’a pas un gros besoin en bande passante, quoi de mieux que Dropbox pour héberger son site ? Parfaitement !&lt;/p&gt;
-&lt;p&gt;L’offre gratuite est suffisante, 2Go, et on peut gagner quelques Go supplémentaires via le parrainage. Pas besoin de payer pour un espace trop petit ou au contraire illimité qu’on ne remplira jamais. La synchro entre le répertoire local et l’espace de stockage distant est efficace et rapide, pas besoin de payer et pourtant d’être obligé de lancer un client FTP. Et &lt;strong&gt;surtout&lt;/strong&gt; il existe un client pour linux, et il est très bien intégré à Nautilus. Ça tombe bien, je suis sous Debian et j'utilise Gnome 3.&lt;/p&gt;
-&lt;ul&gt;
-&lt;li&gt;&lt;a href="http://db.tt/NS3rtUXL"&gt;créer&lt;/a&gt; un compte dropbox&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://www.dropbox.com/enable_public_folder"&gt;activer&lt;/a&gt; le dossier public&lt;/li&gt;
-&lt;li&gt;&lt;a href="https://www.dropbox.com/install"&gt;installer&lt;/a&gt; le logiciel sur son pc&lt;/li&gt;
-&lt;li&gt;copier son site dans le dossier public&lt;/li&gt;
-&lt;li&gt;&lt;a href="http://www.jeromesteunou.net/static/images/dropbox_public_link.png"&gt;récupérer&lt;/a&gt; l’adresse public du fichier index&lt;/li&gt;
-&lt;li&gt;le coller dans un navigateur pour tester, et tadaaaa&lt;/li&gt;
-&lt;/ul&gt;
-&lt;p&gt;Si vous utiliser des feuilles de style CSS et / ou des fichiers de scripts JS vous pouvez utiliser des URL relatives, ça fonctionne très bien. Ensuite, vous pouvez très bien acheter un nom de domain, chez &lt;a href="https://www.gandi.net/"&gt;Gandi&lt;/a&gt; par exemple, et le lier à votre répertoire public dropbox.&lt;/p&gt;
-&lt;p&gt;Et voilà :)&lt;/p&gt;</summary><category term="hosting"></category><category term="blog"></category></entry></feed>
+&lt;p&gt;Mais de rien.&lt;/p&gt;</summary><category term="blog"></category></entry></feed>

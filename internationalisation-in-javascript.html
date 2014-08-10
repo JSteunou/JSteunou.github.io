@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Internationalization in JavaScript</title>
+    
+        <link href="http://www.jeromesteunou.net/feeds/atom.xml" type="application/atom+xml" rel="alternate" title="Jérôme Steunou Full Atom Feed" />
+            
+    <link rel="stylesheet" href="http://www.jeromesteunou.net/theme/css/main.css">
+    <!--[if IE]>
+        <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+</head>
+<body>
+    
+    <header>
+        <h1><a href="http://www.jeromesteunou.net/">Jérôme Steunou</a></h1>
+                        <h2><a href="http://www.jeromesteunou.net/pages/about.html">I code, I manage, I play music, I'm curious.</a></h2>
+                    </header>
+    
+
+    <section>
+              <article>
+    <h1>
+      <a href="http://www.jeromesteunou.net/internationalisation-in-javascript.html" rel="bookmark"
+        title="Permalink to Internationalization in JavaScript">Internationalization in JavaScript</a>
+    </h1>
+    
+    
+    <footer>
+      <p class="date">dim. 10 août 2014</p>
+          <p class="category"><a href="http://www.jeromesteunou.net/category/article.html"><i class="icon-folder-close">&nbsp;</i>article</a></p>
+              <ul class="tags-list"><li><a href="http://www.jeromesteunou.net/tag/javascript.html"><i class="icon-tag">&nbsp;</i>javascript</a></li><li><a href="http://www.jeromesteunou.net/tag/i18n.html"><i class="icon-tag">&nbsp;</i>i18n</a></li></ul>
+        </footer>
+    
+    <section class="post-content">
+        
+            <p>I just released <a href="https://github.com/JSteunou/grunt-jspot">grunt-jspot</a> yesterday, a simple grunt task for <a href="https://github.com/praekelt/jspot">jspot</a>, an extraordinary gettext extractor tool for JavaScript.</p>
+<p>jspot is like the missing piece I was looking for so long to do internationalization in JavaScript. I mean, real internationalization, using standard and stuff.</p>
+<p>But talking about it around make me understand internationalization is not well understand and seems like a very difficult beast to harness for JavaScript application.</p>
+<p>I hope this tutorial could help a lot and make developers use internationalization a lot without scratching head. </p>
+<h2>Big picture</h2>
+<h3>What is internationalization?</h3>
+<p>I will just quote wikipedia, because it sum it up very well:</p>
+<blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
+<p>Internationalization is the process of designing a software application so that it can potentially be adapted to various languages and regions without engineering changes. Localization is the process of adapting internationalized software for a specific region or language by adding locale-specific components and translating text.</p>
+</blockquote>
+<p>So you will design your application in a way it can display</p>
+<blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
+<p>Hello world!</p>
+</blockquote>
+<p>or</p>
+<blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
+<p>Salut tout le monde !</p>
+</blockquote>
+<p>Internationalization is often see as <em>i18n</em>. Yeah, lazy developers that can not write a long word :p</p>
+<h3>What is the difference with localization?</h3>
+<p>It's more about adapting your format to regional specifications. Date format, currency, numbers are good example.</p>
+<blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
+<p>$9,999.99</p>
+</blockquote>
+<p>or</p>
+<blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
+<p>99 999,99 $</p>
+</blockquote>
+<p>Localization is often see as l10n. Again... lazy is good :)</p>
+<h3>What is gettext?</h3>
+<p>Again, thank you wikipedia</p>
+<blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
+<p>gettext is an internationalization and localization (i18n) system commonly used for writing multilingual programs on Unix-like computer operating systems. The most commonly used implementation of gettext is GNU gettext, released by the GNU Project in 1995.</p>
+</blockquote>
+<p>Also it is very common and standard so it's very interesting to use it. Translators know how to deal with files it generates and it has nice features like <em>pluralization</em>.</p>
+<blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
+<p>Wow, why do I have to care about pluralization?</p>
+</blockquote>
+<p>Because plurals do not follow the same rules for each language! For example, in English 0 (zero) is plural, whereas it is singular in French. Irish could have 4 plurals form. That's why good pluralization feature is very important.</p>
+<blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
+<p>Is gettext gonna translate for me?</p>
+</blockquote>
+<p>Hell no! Gettext will expose a standard so all your application words and sentences could be together in a <em>dictionary</em>. Then translators will create a <em>catalog</em> per language you wanna expose into your application and your application will read those catalogs with the gettext API.</p>
+<blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
+<p>Show me how it works in a software!</p>
+</blockquote>
+<p>Ok, first, the big picture, please dont run away, it's easier than it's look like ;)</p>
+<p><img alt="gettext" src="http://www.jeromesteunou.net/static/images/gettext.png" title="gettext scheme" /></p>
+<h2>Concrete example in JavaScript</h2>
+<h3>Using a gettext JavaScript implementation</h3>
+<p>Looking at the presentation above, you see you need a JavaScript implementation of gettext. I will use <a href="http://slexaxton.github.io/Jed/">Jed</a>. But you are free to use whatever you like. That's the beauty of this system, each tool at each step can be changed by another tool if you want.</p>
+<p>Remember, the gettext implementation will need to load a catalog and will expose a gettext API.</p>
+<div class="highlight"><pre><span class="c1">// I will show you later how to really load a catalog</span>
+<span class="c1">// + some more specific cases</span>
+<span class="kd">var</span> <span class="nx">myFrenchCatalog</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fr&#39;</span><span class="p">);</span>
+
+<span class="kd">var</span> <span class="nx">i18n</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Jed</span><span class="p">(</span><span class="nx">myFrenchCatalog</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">translation</span> <span class="o">=</span> <span class="nx">i18n</span><span class="p">.</span><span class="nx">gettext</span><span class="p">(</span><span class="s1">&#39;Hello world!&#39;</span><span class="p">);</span>
+<span class="nx">translation</span> <span class="o">===</span> <span class="s1">&#39;Salut tout le monde !&#39;</span> <span class="c1">// true</span>
+</pre></div>
+
+
+<p>You are now using gettext!</p>
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">myFrenchCatalog</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fr&#39;</span><span class="p">);</span>
+
+<span class="c1">// no translation, english selected</span>
+<span class="kd">var</span> <span class="nx">i18n</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Jed</span><span class="p">({});</span>
+<span class="kd">var</span> <span class="nx">translation</span> <span class="o">=</span> <span class="nx">i18n</span><span class="p">.</span><span class="nx">ngettext</span><span class="p">(</span><span class="s1">&#39;apple&#39;</span><span class="p">,</span> <span class="s1">&#39;apples&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="nx">translation</span> <span class="o">===</span> <span class="s1">&#39;apples&#39;</span> <span class="c1">// true</span>
+
+<span class="c1">// fr translation, french selected</span>
+<span class="kd">var</span> <span class="nx">i18n</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Jed</span><span class="p">(</span><span class="nx">myFrenchCatalog</span><span class="p">);</span>
+<span class="kd">var</span> <span class="nx">translation</span> <span class="o">=</span> <span class="nx">i18n</span><span class="p">.</span><span class="nx">ngettext</span><span class="p">(</span><span class="s1">&#39;apple&#39;</span><span class="p">,</span> <span class="s1">&#39;apples&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
+<span class="nx">translation</span> <span class="o">===</span> <span class="s1">&#39;pomme&#39;</span> <span class="c1">// true</span>
+</pre></div>
+
+
+<p>You are now using pluralization!</p>
+<p>Ok, now you just have seen the right part of the schema above. You know how to start a gettext implementation and how to use the gettext API in your JavaScript application. (not all of it, but the necessary :p)</p>
+<h3>Using a gettext extractor to create your dictionary</h3>
+<p>I will suppose you know how to use <a href="http://gruntjs.com">Grunt</a> inside your project. We will use the <a href="https://github.com/praekelt/jspot">jspot</a> gettext extractor with <a href="https://github.com/JSteunou/grunt-jspot">grunt-jspot</a>.</p>
+<p>If you are not using Grunt, jspot can also be used in JavaScript or command line.</p>
+<p>After the classic <code>npm install grunt-jspot</code>, in your project's Gruntfile, add a section named jspot to the data object passed into grunt.initConfig().</p>
+<div class="highlight"><pre><span class="nx">grunt</span><span class="p">.</span><span class="nx">initConfig</span><span class="p">({</span>
+    <span class="nx">jspot</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">myCoolProject</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">files</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s1">&#39;locales&#39;</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;src/**/*.js&#39;</span><span class="p">]</span>
+            <span class="p">}</span>            
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">grunt</span><span class="p">.</span><span class="nx">loadNpmTasks</span><span class="p">(</span><span class="s1">&#39;grunt-jspot&#39;</span><span class="p">);</span>
+</pre></div>
+
+
+<p>If your application contains a call to gettext like this</p>
+<div class="highlight"><pre><span class="nx">i18n</span><span class="p">.</span><span class="nx">gettext</span><span class="p">(</span><span class="s1">&#39;Hello World!&#39;</span><span class="p">);</span>
+</pre></div>
+
+
+<p>Running <code>grunt jspot</code> generate you a file <code>locales/messages.pot</code> and it certainly looks like</p>
+<div class="highlight"><pre><span class="n">msgid</span> <span class="s">&quot;&quot;</span>
+<span class="n">msgstr</span> <span class="s">&quot;&quot;</span>
+<span class="s">&quot;POT-Creation-Date: 2014-08-09 05:32:+0000</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="s">&quot;Project-Id-Version: PACKAGE VERSION</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="s">&quot;Language-Team: LANGUAGE &lt;LL@li.org&gt;</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="s">&quot;Language: </span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="s">&quot;MIME-Version: 1.0</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="s">&quot;Content-Type: text/plain; charset=utf-8</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="s">&quot;Content-Transfer-Encoding: 8bit</span><span class="se">\n</span><span class="s">&quot;</span>
+<span class="s">&quot;PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE</span><span class="se">\n</span><span class="s">&quot;</span>
+
+<span class="cp">#: app.js:1</span>
+<span class="n">msgid</span> <span class="s">&quot;Hello World!&quot;</span>
+<span class="n">msgstr</span> <span class="s">&quot;&quot;</span>
+</pre></div>
+
+
+<p>That's it. Your dictionary is ready. And yeah it's what we called a <strong>pot</strong> file. Please do not edit it manually. Like never! Its format is very important.</p>
+<h3>Generate catalogs and keeping them updated</h3>
+<p>You had seen how Jed exposes the gettext API and uses catalogs. You had seen how jspot creates the dictionary <em>pot</em> file. One more step.</p>
+<blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
+<p>How to generates catalogs?</p>
+</blockquote>
+<p>Two way, the easy way, or the... Nah. Both are easy, depending on what you are use to.</p>
+<p>If you remember, and read wikipedia, gettext is also known as GNU Gettext and comes with Linux. In fact, in most Linux distributions we have commands likes <code>msginit</code>, <code>msgmerge</code>, ... These are gettext commands. <code>msginit</code> is for creating a new catalog and <code>msgmerge</code> is for updating a catalog with all new entries from an updated dictionary.</p>
+<p>But I will told you about the graphical way, which allow me to show you how to translate too :)</p>
+<p>The tool I'm using to create and manage my catalogs is <a href="http://poedit.net/">POEdit</a>. It's free, open source, and runs on different OS.</p>
+<p>Launch it, and go in file &gt; New from pot file (or a thing like that). Select your dictionary previously created and fill in some information. Do not miss to fill in the correct plural form for you catalog.</p>
+<p>// TODO insert image</p>
+<p>There is also a catalog manager, which help you to see your catalog per project, update all at once if the dictionary was updated and how you catalog status (green: translation = 100%).</p>
+<p>// TODO insert image</p>
+<p>Selecting a catalog you can edit it and update translations. For a translations you can fill the singular and the plural form, without bothering about the <em>when</em> use plural, gettext will handle it for you.</p>
+<p>// TODO insert image</p>
+<p>Now you know about creating and updating catalogs but also translate your application!</p>
+<blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
+<p>Hey, one last thing, catalogs are .po or .mo files. Jed only read JSON!</p>
+</blockquote>
+<p>True! I told you I will show you how to load catalogs in Jed</p>
+<h3>Last step! Convert your catalogs into JSON</h3>
+<p>This one is so easy. <a href="https://github.com/rockykitamura/grunt-po2json">grunt-po2json</a>.</p>
+<p>And again, if you are not using Grunt, you can just use <a href="https://github.com/mikeedwards/po2json">po2json</a> directly or jspot which include po2json too.</p>
+<p>After the classic <code>npm install grunt-po2json</code>, in your project's Gruntfile, add a section named po2json to the data object passed into grunt.initConfig().</p>
+<div class="highlight"><pre><span class="nx">grunt</span><span class="p">.</span><span class="nx">initConfig</span><span class="p">({</span>
+    <span class="nx">po2json</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">myCoolProject</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">src</span><span class="o">:</span> <span class="p">[</span><span class="s2">&quot;locales/*.po&quot;</span><span class="p">],</span>
+            <span class="nx">dest</span><span class="o">:</span> <span class="s2">&quot;locales/&quot;</span><span class="p">,</span>
+            <span class="nx">options</span><span class="o">:</span> <span class="p">{</span>
+                <span class="nx">pretty</span><span class="o">:</span> <span class="kc">true</span><span class="p">,</span>
+                <span class="nx">format</span><span class="o">:</span> <span class="s1">&#39;jed&#39;</span>
+            <span class="p">}</span>
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">grunt</span><span class="p">.</span><span class="nx">loadNpmTasks</span><span class="p">(</span><span class="s1">&#39;grunt-po2json&#39;</span><span class="p">);</span>
+</pre></div>
+
+
+<p>The <code>format: 'jed'</code> option matters because it will wrap the generated object in jed options you will just have to write <code>new Jed(myCatalog)</code> instead of <code>new Jed({domain: 'myDomain', locale_data: MyCatalog})</code></p>
+<p>About how to load the catalog, I will leave this to what you prefer. You can <code>var frCatalog = require('./locales/fr');</code> if you are using CommonJS syntax, or <code>define['json!./locales/fr.json', ...], frCatalog, ...</code> if you are using AMD syntax. Or just use ajax if you are not really in modules.</p>
+<p>That's it! I think if you are looking at the schema above, the circle is closed know.</p>
+<p><img alt="gettextend" src="http://www.jeromesteunou.net/static/images/gettext_end.png" title="gettext end scheme" /></p>
+<h2>Bonus</h2>
+<blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
+<p>I'm using Handlebars, can I extract gettext string from it with jspot?</p>
+</blockquote>
+<p>Sure you can!</p>
+<p>Add a helper like this, supposing <code>i18n</code> is your Jed instance.</p>
+<div class="highlight"><pre><span class="nx">Handlebars</span><span class="p">.</span><span class="nx">registerHelper</span><span class="p">(</span><span class="s1">&#39;gettext&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
+    <span class="c1">// arguments = in template param + a handlebars hash</span>
+    <span class="c1">// this = in template context</span>
+    <span class="k">return</span> <span class="nx">i18n</span><span class="p">.</span><span class="nx">gettext</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">i18n</span><span class="p">,</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)));</span>
+<span class="p">});</span>
+
+<span class="nx">Handlebars</span><span class="p">.</span><span class="nx">registerHelper</span><span class="p">(</span><span class="s1">&#39;gettext.ngettext&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+    <span class="c1">// arguments = in template param + a handlebars hash</span>
+    <span class="c1">// this = in template context</span>
+    <span class="k">return</span> <span class="nx">i18n</span><span class="p">.</span><span class="nx">ngettext</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">i18n</span><span class="p">,</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)));</span>
+<span class="p">});</span>
+</pre></div>
+
+
+<div class="highlight"><pre><span class="nt">&lt;div&gt;</span>{{gettext &quot;I&#39;m singular&quot; }}<span class="nt">&lt;/div&gt;</span>
+<span class="nt">&lt;div&gt;</span>{{gettext.ngettext &quot;cat&quot; &quot;cats&quot; much }}<span class="nt">&lt;/div&gt;</span>
+</pre></div>
+
+
+<p>And configure your grunt task to add Handlebars files. Those files must end with <code>.hbs</code>. (This will be configurable very soon).</p>
+<div class="highlight"><pre><span class="nx">grunt</span><span class="p">.</span><span class="nx">initConfig</span><span class="p">({</span>
+    <span class="nx">jspot</span><span class="o">:</span> <span class="p">{</span>
+        <span class="nx">myCoolProject</span><span class="o">:</span> <span class="p">{</span>
+            <span class="nx">files</span><span class="o">:</span> <span class="p">{</span>
+                <span class="s1">&#39;locales&#39;</span><span class="o">:</span> <span class="p">[</span><span class="s1">&#39;src/**/*.js&#39;</span><span class="p">,</span> <span class="s1">&#39;src/**/*.hbs&#39;</span><span class="p">]</span>
+            <span class="p">}</span>            
+        <span class="p">}</span>
+    <span class="p">}</span>
+<span class="p">});</span>
+
+<span class="nx">grunt</span><span class="p">.</span><span class="nx">loadNpmTasks</span><span class="p">(</span><span class="s1">&#39;grunt-jspot&#39;</span><span class="p">);</span>
+</pre></div>
+
+
+<blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
+<p>I'm using Underscorejs template, can I extract gettext string from it with jspot?</p>
+</blockquote>
+<p>Not yet! But jspot can extract string from Javascript very well. It also can have external extractors attached to its extractor part. As Underscore compiles templates in pure JavaScript with source attached, a <code>jspot-underscore-extractor</code> will land very soon :)</p>
+<blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
+<p>I'm using XXX template engine, can I extract gettext string from it with jspot?</p>
+</blockquote>
+<p>Not yet! Like for Underscore template, if it generate pure JavaScript, an external extractor should be easy to write. Contribution into <a href="https://github.com/JSteunou/grunt-jspot">grunt-jspot</a> and <a href="https://github.com/praekelt/jspot">jspot</a> are welcome.</p>
+<blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
+<p>How can I handle numbers in plural sentences?</p>
+</blockquote>
+<p>With the <em>sprintf</em> tool. An implementation exists for JavaScript and you have it directly in Jed: <code>Jed.sprintf</code>.</p>
+<div class="highlight"><pre><span class="kd">var</span> <span class="nx">numToasters</span> <span class="o">=</span> <span class="mi">3</span><span class="p">;</span>
+<span class="kd">var</span> <span class="nx">translation</span> <span class="o">=</span> <span class="nx">Jed</span><span class="p">.</span><span class="nx">sprintf</span><span class="p">(</span><span class="nx">i18n</span><span class="p">.</span><span class="nx">ngettext</span><span class="p">(</span><span class="s1">&#39;I have one toaster.&#39;</span><span class="p">,</span> <span class="s1">&#39;I have %d toasters.&#39;</span><span class="p">,</span> <span class="nx">numToasters</span><span class="p">),</span> <span class="nx">numToasters</span><span class="p">);</span>
+<span class="c1">// I have 3 toasters</span>
+</pre></div>
+
+
+<p>Translators will see <code>I have %d toasters.</code> in plural key for these entry and will have to let the <code>%d</code> but can put it anywhere in the sentence. This is useful because some language do not have the same word order than English.
+You can also use postitional syntax if you have more than one number in your sentence and care about order in other languages. http://www.diveintojavascript.com/projects/javascript-sprintf</p>
+<p>Moreover, you can do the same into Handlebars, supposing you register a <em>sprintf</em> helper, thanks to Handlebars sub-expressions.</p>
+<div class="highlight"><pre><span class="nt">&lt;div&gt;</span>{{sprintf (gettext.ngettext &quot;one cat&quot; &quot;%d cats&quot; much) much }}<span class="nt">&lt;/div&gt;</span>
+</pre></div>
+          </section>
+      
+  </article>
+
+    
+        
+            <div ng-app="comimoc" ng-controller="CommentCtrl" ng-include="'http://www.jeromesteunou.net/theme/views/comimoc.html'"></div>
+            
+    
+    </section>
+
+
+    <aside>
+    </aside>
+    
+    <footer>
+        <p>
+                        <a href="https://github.com/getpelican/pelican" title="Made with Pelican"><i class="icon-github">&nbsp;</i>Made with Pelican</a>
+                        <a href="http://www.jeromesteunou.net/pages/comimoc.html" title="Comimoc project"><i class="icon-comments">&nbsp;</i>Comimoc project</a>
+                        <a href="http://www.jeromesteunou.net/recipe-for-marionette-handlebars-browserify-grunt.html" title="Marionetteify project"><i class="icon-comments">&nbsp;</i>Marionetteify project</a>
+                        <a href="http://www.jeromesteunou.net/pages/about.html" title="About"><i class="icon-plus">&nbsp;</i>About</a>
+                        <a href="http://fr.viadeo.com/fr/profile/jerome.steunou" title="Viadeo"><i class="icon-circle-blank">&nbsp;</i>Viadeo</a>
+                        <a href="http://www.jeromesteunou.net/None" title="Feed"><i class="icon-rss">&nbsp;</i>Feed</a>
+                        <a href="mailto:contact@jeromesteunou.net" title="Email"><i class="icon-envelope-alt">&nbsp;</i>Email</a>
+                    </p>
+                <p class="footer_line">Copyright © 2014 Jérôme Steunou.</p>
+            </footer>
+    
+    
+        
+            <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.2.0-rc.2/angular-resource.min.js"></script>
+    
+    <script>
+        angular.module('comimoc', ['ngResource'])
+            .constant('COMIMOC_CONFIG', {
+                'RESOURCES_LOCATION':   'http://comimoc.herokuapp.com',
+                'WEBSITE':              'jeromesteunou.net',
+                'HASH':                 false,
+                'ARGS':                 false,
+                'LOCALE':               'en',
+                });
+    </script>
+    
+    <script src="http://www.jeromesteunou.net/theme/js/comimoc.js"></script>
+            
+    
+</body>
+</html>
