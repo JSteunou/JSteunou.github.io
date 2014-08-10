@@ -196,30 +196,31 @@
 </pre></div>
 
 
-<p>The <code>format: 'jed'</code> option matters because it will wrap the generated object in jed options you will just have to write <code>new Jed(myCatalog)</code> instead of <code>new Jed({domain: 'myDomain', locale_data: MyCatalog})</code></p>
+<p>The <code>format: 'jed'</code> option matters because it will wrap the generated object into jed options. With this you will just have to write <code>new Jed(myCatalog)</code> instead of <code>new Jed({domain: 'myDomain', locale_data: MyCatalog})</code></p>
 <p>About how to load the catalog, I will leave this to what you prefer. You can <code>var frCatalog = require('./locales/fr');</code> if you are using CommonJS syntax, or <code>define['json!./locales/fr.json', ...], frCatalog, ...</code> if you are using AMD syntax. Or just use ajax if you are not really in modules.</p>
 <p>That's it! I think if you are looking at the schema above, the circle is closed know.</p>
 <p><img alt="gettextend" src="http://www.jeromesteunou.net/static/images/gettext_end.png" title="gettext end scheme" /></p>
 <h2>Bonus</h2>
 <blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
-<p>I'm using Handlebars, can I extract gettext string from it with jspot?</p>
+<p>I'm using Handlebars, can I extract gettext strings from it with jspot?</p>
 </blockquote>
 <p>Sure you can!</p>
-<p>Add a helper like this, supposing <code>i18n</code> is your Jed instance.</p>
+<p>Supposing <code>i18n</code> is your Jed instance. Add a helper like this:</p>
 <div class="highlight"><pre><span class="nx">Handlebars</span><span class="p">.</span><span class="nx">registerHelper</span><span class="p">(</span><span class="s1">&#39;gettext&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">(</span><span class="nx">context</span><span class="p">)</span> <span class="p">{</span>
-    <span class="c1">// arguments = in template param + a handlebars hash</span>
+    <span class="c1">// arguments = in template params + a handlebars hash</span>
     <span class="c1">// this = in template context</span>
     <span class="k">return</span> <span class="nx">i18n</span><span class="p">.</span><span class="nx">gettext</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">i18n</span><span class="p">,</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)));</span>
 <span class="p">});</span>
 
 <span class="nx">Handlebars</span><span class="p">.</span><span class="nx">registerHelper</span><span class="p">(</span><span class="s1">&#39;gettext.ngettext&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
-    <span class="c1">// arguments = in template param + a handlebars hash</span>
+    <span class="c1">// arguments = in template params + a handlebars hash</span>
     <span class="c1">// this = in template context</span>
     <span class="k">return</span> <span class="nx">i18n</span><span class="p">.</span><span class="nx">ngettext</span><span class="p">.</span><span class="nx">apply</span><span class="p">(</span><span class="nx">i18n</span><span class="p">,</span> <span class="nb">Array</span><span class="p">.</span><span class="nx">prototype</span><span class="p">.</span><span class="nx">slice</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="nx">arguments</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="nx">arguments</span><span class="p">.</span><span class="nx">length</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)));</span>
 <span class="p">});</span>
 </pre></div>
 
 
+<p>Use it:</p>
 <div class="highlight"><pre><span class="nt">&lt;div&gt;</span>{{gettext &quot;I&#39;m singular&quot; }}<span class="nt">&lt;/div&gt;</span>
 <span class="nt">&lt;div&gt;</span>{{gettext.ngettext &quot;cat&quot; &quot;cats&quot; much }}<span class="nt">&lt;/div&gt;</span>
 </pre></div>

@@ -160,30 +160,31 @@
 &lt;/pre&gt;&lt;/div&gt;
 
 
-&lt;p&gt;The &lt;code&gt;format: 'jed'&lt;/code&gt; option matters because it will wrap the generated object in jed options you will just have to write &lt;code&gt;new Jed(myCatalog)&lt;/code&gt; instead of &lt;code&gt;new Jed({domain: 'myDomain', locale_data: MyCatalog})&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;The &lt;code&gt;format: 'jed'&lt;/code&gt; option matters because it will wrap the generated object into jed options. With this you will just have to write &lt;code&gt;new Jed(myCatalog)&lt;/code&gt; instead of &lt;code&gt;new Jed({domain: 'myDomain', locale_data: MyCatalog})&lt;/code&gt;&lt;/p&gt;
 &lt;p&gt;About how to load the catalog, I will leave this to what you prefer. You can &lt;code&gt;var frCatalog = require('./locales/fr');&lt;/code&gt; if you are using CommonJS syntax, or &lt;code&gt;define['json!./locales/fr.json', ...], frCatalog, ...&lt;/code&gt; if you are using AMD syntax. Or just use ajax if you are not really in modules.&lt;/p&gt;
 &lt;p&gt;That's it! I think if you are looking at the schema above, the circle is closed know.&lt;/p&gt;
 &lt;p&gt;&lt;img alt="gettextend" src="http://www.jeromesteunou.net/static/images/gettext_end.png" title="gettext end scheme" /&gt;&lt;/p&gt;
 &lt;h2&gt;Bonus&lt;/h2&gt;
 &lt;blockquote&gt;
-&lt;p&gt;I'm using Handlebars, can I extract gettext string from it with jspot?&lt;/p&gt;
+&lt;p&gt;I'm using Handlebars, can I extract gettext strings from it with jspot?&lt;/p&gt;
 &lt;/blockquote&gt;
 &lt;p&gt;Sure you can!&lt;/p&gt;
-&lt;p&gt;Add a helper like this, supposing &lt;code&gt;i18n&lt;/code&gt; is your Jed instance.&lt;/p&gt;
+&lt;p&gt;Supposing &lt;code&gt;i18n&lt;/code&gt; is your Jed instance. Add a helper like this:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nx"&gt;Handlebars&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;registerHelper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;gettext&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;context&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="c1"&gt;// arguments = in template param + a handlebars hash&lt;/span&gt;
+    &lt;span class="c1"&gt;// arguments = in template params + a handlebars hash&lt;/span&gt;
     &lt;span class="c1"&gt;// this = in template context&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;i18n&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;gettext&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;i18n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;Array&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;prototype&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;slice&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;call&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;arguments&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;arguments&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;length&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)));&lt;/span&gt;
 &lt;span class="p"&gt;});&lt;/span&gt;
 
 &lt;span class="nx"&gt;Handlebars&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;registerHelper&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;gettext.ngettext&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="kd"&gt;function&lt;/span&gt;&lt;span class="p"&gt;()&lt;/span&gt; &lt;span class="p"&gt;{&lt;/span&gt;
-    &lt;span class="c1"&gt;// arguments = in template param + a handlebars hash&lt;/span&gt;
+    &lt;span class="c1"&gt;// arguments = in template params + a handlebars hash&lt;/span&gt;
     &lt;span class="c1"&gt;// this = in template context&lt;/span&gt;
     &lt;span class="k"&gt;return&lt;/span&gt; &lt;span class="nx"&gt;i18n&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;ngettext&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;apply&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;i18n&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nb"&gt;Array&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;prototype&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;slice&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;call&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;arguments&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="nx"&gt;arguments&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;length&lt;/span&gt; &lt;span class="o"&gt;-&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;&lt;span class="p"&gt;)));&lt;/span&gt;
 &lt;span class="p"&gt;});&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
+&lt;p&gt;Use it:&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="nt"&gt;&amp;lt;div&amp;gt;&lt;/span&gt;{{gettext &amp;quot;I&amp;#39;m singular&amp;quot; }}&lt;span class="nt"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
 &lt;span class="nt"&gt;&amp;lt;div&amp;gt;&lt;/span&gt;{{gettext.ngettext &amp;quot;cat&amp;quot; &amp;quot;cats&amp;quot; much }}&lt;span class="nt"&gt;&amp;lt;/div&amp;gt;&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
