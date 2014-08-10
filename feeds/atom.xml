@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>Jérôme Steunou</title><link href="http://www.jeromesteunou.net/" rel="alternate"></link><link href="http://www.jeromesteunou.net/feeds/atom.xml" rel="self"></link><id>http://www.jeromesteunou.net/</id><updated>2014-08-10T00:00:00+02:00</updated><entry><title>Internationalization in JavaScript</title><link href="http://www.jeromesteunou.net/internationalisation-in-javascript.html" rel="alternate"></link><updated>2014-08-10T00:00:00+02:00</updated><author><name>Jérôme Steunou</name></author><id>tag:www.jeromesteunou.net,2014-08-10:internationalisation-in-javascript.html</id><summary type="html">&lt;p&gt;I just released &lt;a href="https://github.com/JSteunou/grunt-jspot"&gt;grunt-jspot&lt;/a&gt; yesterday, a simple grunt task for &lt;a href="https://github.com/praekelt/jspot"&gt;jspot&lt;/a&gt;, an extraordinary gettext extractor tool for JavaScript.&lt;/p&gt;
 &lt;p&gt;jspot is like the missing piece I was looking for so long to do internationalization in JavaScript. I mean, real internationalization, using standard and stuff.&lt;/p&gt;
-&lt;p&gt;But talking about it around make me understand internationalization is not well understand and seems like a very difficult beast to harness for JavaScript application.&lt;/p&gt;
-&lt;p&gt;I hope this tutorial could help a lot and make developers use internationalization a lot without scratching head. &lt;/p&gt;
+&lt;p&gt;But talking about it make me realize internationalization is not well understood and seems like a very difficult beast to harness for JavaScript application.&lt;/p&gt;
+&lt;p&gt;I hope this tutorial could help a lot and make developers use internationalization a lot without fear. &lt;/p&gt;
 &lt;h2&gt;Big picture&lt;/h2&gt;
 &lt;h3&gt;What is internationalization?&lt;/h3&gt;
 &lt;p&gt;I will just quote wikipedia, because it sum it up very well:&lt;/p&gt;
@@ -33,7 +33,7 @@
 &lt;blockquote&gt;
 &lt;p&gt;gettext is an internationalization and localization (i18n) system commonly used for writing multilingual programs on Unix-like computer operating systems. The most commonly used implementation of gettext is GNU gettext, released by the GNU Project in 1995.&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;Also it is very common and standard so it's very interesting to use it. Translators know how to deal with files it generates and it has nice features like &lt;em&gt;pluralization&lt;/em&gt;.&lt;/p&gt;
+&lt;p&gt;It is very common and standard so it's interesting to use it. Translators know how to deal with files it generates and it has nice features like &lt;em&gt;pluralization&lt;/em&gt;.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Wow, why do I have to care about pluralization?&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -41,7 +41,7 @@
 &lt;blockquote&gt;
 &lt;p&gt;Is gettext gonna translate for me?&lt;/p&gt;
 &lt;/blockquote&gt;
-&lt;p&gt;Hell no! Gettext will expose a standard so all your application words and sentences could be together in a &lt;em&gt;dictionary&lt;/em&gt;. Then translators will create a &lt;em&gt;catalog&lt;/em&gt; per language you wanna expose into your application and your application will read those catalogs with the gettext API.&lt;/p&gt;
+&lt;p&gt;Hell no! Gettext will expose a standard so all your application words and sentences could fit together in a &lt;em&gt;dictionary&lt;/em&gt;. Then translators will create a &lt;em&gt;catalog&lt;/em&gt; per language you wanna expose into your application and your application will read those catalogs with the gettext API.&lt;/p&gt;
 &lt;blockquote&gt;
 &lt;p&gt;Show me how it works in a software!&lt;/p&gt;
 &lt;/blockquote&gt;
@@ -64,20 +64,22 @@
 &lt;p&gt;You are now using gettext!&lt;/p&gt;
 &lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;myFrenchCatalog&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;require&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;fr&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 
-&lt;span class="c1"&gt;// no translation, english selected&lt;/span&gt;
+&lt;span class="c1"&gt;// no translation, for example english selected&lt;/span&gt;
+&lt;span class="c1"&gt;// and your keys are already good english&lt;/span&gt;
+&lt;span class="c1"&gt;// or you just wanna start playing with Jed without catalogs&lt;/span&gt;
 &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;i18n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;Jed&lt;/span&gt;&lt;span class="p"&gt;({});&lt;/span&gt;
 &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;translation&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;i18n&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;ngettext&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;apple&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;apples&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;span class="nx"&gt;translation&lt;/span&gt; &lt;span class="o"&gt;===&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;apples&amp;#39;&lt;/span&gt; &lt;span class="c1"&gt;// true&lt;/span&gt;
+&lt;span class="nx"&gt;translation&lt;/span&gt; &lt;span class="o"&gt;===&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;apples&amp;#39;&lt;/span&gt; &lt;span class="c1"&gt;// true &amp;amp; plural&lt;/span&gt;
 
 &lt;span class="c1"&gt;// fr translation, french selected&lt;/span&gt;
 &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;i18n&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="k"&gt;new&lt;/span&gt; &lt;span class="nx"&gt;Jed&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="nx"&gt;myFrenchCatalog&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
 &lt;span class="kd"&gt;var&lt;/span&gt; &lt;span class="nx"&gt;translation&lt;/span&gt; &lt;span class="o"&gt;=&lt;/span&gt; &lt;span class="nx"&gt;i18n&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="nx"&gt;ngettext&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="s1"&gt;&amp;#39;apple&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;apples&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;&lt;span class="p"&gt;);&lt;/span&gt;
-&lt;span class="nx"&gt;translation&lt;/span&gt; &lt;span class="o"&gt;===&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;pomme&amp;#39;&lt;/span&gt; &lt;span class="c1"&gt;// true&lt;/span&gt;
+&lt;span class="nx"&gt;translation&lt;/span&gt; &lt;span class="o"&gt;===&lt;/span&gt; &lt;span class="s1"&gt;&amp;#39;pomme&amp;#39;&lt;/span&gt; &lt;span class="c1"&gt;// true &amp;amp; singular&lt;/span&gt;
 &lt;/pre&gt;&lt;/div&gt;
 
 
 &lt;p&gt;You are now using pluralization!&lt;/p&gt;
-&lt;p&gt;Ok, now you just have seen the right part of the schema above. You know how to start a gettext implementation and how to use the gettext API in your JavaScript application. (not all of it, but the necessary :p)&lt;/p&gt;
+&lt;p&gt;Alright, you just have seen the right part of the schema above. You know how to start a gettext implementation and how to use the gettext API in your JavaScript application. (not all of it, but the essential :p)&lt;/p&gt;
 &lt;h3&gt;Using a gettext extractor to create your dictionary&lt;/h3&gt;
 &lt;p&gt;I will suppose you know how to use &lt;a href="http://gruntjs.com"&gt;Grunt&lt;/a&gt; inside your project. We will use the &lt;a href="https://github.com/praekelt/jspot"&gt;jspot&lt;/a&gt; gettext extractor with &lt;a href="https://github.com/JSteunou/grunt-jspot"&gt;grunt-jspot&lt;/a&gt;.&lt;/p&gt;
 &lt;p&gt;If you are not using Grunt, jspot can also be used in JavaScript or command line.&lt;/p&gt;
@@ -121,10 +123,7 @@
 
 &lt;p&gt;That's it. Your dictionary is ready. And yeah it's what we called a &lt;strong&gt;pot&lt;/strong&gt; file. Please do not edit it manually. Like never! Its format is very important.&lt;/p&gt;
 &lt;h3&gt;Generate catalogs and keeping them updated&lt;/h3&gt;
-&lt;p&gt;You had seen how Jed exposes the gettext API and uses catalogs. You had seen how jspot creates the dictionary &lt;em&gt;pot&lt;/em&gt; file. One more step.&lt;/p&gt;
-&lt;blockquote&gt;
-&lt;p&gt;How to generates catalogs?&lt;/p&gt;
-&lt;/blockquote&gt;
+&lt;p&gt;You had seen how Jed exposes the gettext API and uses catalogs. You had seen how jspot creates the dictionary &lt;em&gt;pot&lt;/em&gt; file. One more step, how to generates catalogs:&lt;/p&gt;
 &lt;p&gt;Two way, the easy way, or the... Nah. Both are easy, depending on what you are use to.&lt;/p&gt;
 &lt;p&gt;If you remember, and read wikipedia, gettext is also known as GNU Gettext and comes with Linux. In fact, in most Linux distributions we have commands likes &lt;code&gt;msginit&lt;/code&gt;, &lt;code&gt;msgmerge&lt;/code&gt;, ... These are gettext commands. &lt;code&gt;msginit&lt;/code&gt; is for creating a new catalog and &lt;code&gt;msgmerge&lt;/code&gt; is for updating a catalog with all new entries from an updated dictionary.&lt;/p&gt;
 &lt;p&gt;But I will told you about the graphical way, which allow me to show you how to translate too :)&lt;/p&gt;

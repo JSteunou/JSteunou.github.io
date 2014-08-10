@@ -37,8 +37,8 @@
         
             <p>I just released <a href="https://github.com/JSteunou/grunt-jspot">grunt-jspot</a> yesterday, a simple grunt task for <a href="https://github.com/praekelt/jspot">jspot</a>, an extraordinary gettext extractor tool for JavaScript.</p>
 <p>jspot is like the missing piece I was looking for so long to do internationalization in JavaScript. I mean, real internationalization, using standard and stuff.</p>
-<p>But talking about it around make me understand internationalization is not well understand and seems like a very difficult beast to harness for JavaScript application.</p>
-<p>I hope this tutorial could help a lot and make developers use internationalization a lot without scratching head. </p>
+<p>But talking about it make me realize internationalization is not well understood and seems like a very difficult beast to harness for JavaScript application.</p>
+<p>I hope this tutorial could help a lot and make developers use internationalization a lot without fear. </p>
 <h2>Big picture</h2>
 <h3>What is internationalization?</h3>
 <p>I will just quote wikipedia, because it sum it up very well:</p>
@@ -69,7 +69,7 @@
 <blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
 <p>gettext is an internationalization and localization (i18n) system commonly used for writing multilingual programs on Unix-like computer operating systems. The most commonly used implementation of gettext is GNU gettext, released by the GNU Project in 1995.</p>
 </blockquote>
-<p>Also it is very common and standard so it's very interesting to use it. Translators know how to deal with files it generates and it has nice features like <em>pluralization</em>.</p>
+<p>It is very common and standard so it's interesting to use it. Translators know how to deal with files it generates and it has nice features like <em>pluralization</em>.</p>
 <blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
 <p>Wow, why do I have to care about pluralization?</p>
 </blockquote>
@@ -77,7 +77,7 @@
 <blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
 <p>Is gettext gonna translate for me?</p>
 </blockquote>
-<p>Hell no! Gettext will expose a standard so all your application words and sentences could be together in a <em>dictionary</em>. Then translators will create a <em>catalog</em> per language you wanna expose into your application and your application will read those catalogs with the gettext API.</p>
+<p>Hell no! Gettext will expose a standard so all your application words and sentences could fit together in a <em>dictionary</em>. Then translators will create a <em>catalog</em> per language you wanna expose into your application and your application will read those catalogs with the gettext API.</p>
 <blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
 <p>Show me how it works in a software!</p>
 </blockquote>
@@ -100,20 +100,22 @@
 <p>You are now using gettext!</p>
 <div class="highlight"><pre><span class="kd">var</span> <span class="nx">myFrenchCatalog</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;fr&#39;</span><span class="p">);</span>
 
-<span class="c1">// no translation, english selected</span>
+<span class="c1">// no translation, for example english selected</span>
+<span class="c1">// and your keys are already good english</span>
+<span class="c1">// or you just wanna start playing with Jed without catalogs</span>
 <span class="kd">var</span> <span class="nx">i18n</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Jed</span><span class="p">({});</span>
 <span class="kd">var</span> <span class="nx">translation</span> <span class="o">=</span> <span class="nx">i18n</span><span class="p">.</span><span class="nx">ngettext</span><span class="p">(</span><span class="s1">&#39;apple&#39;</span><span class="p">,</span> <span class="s1">&#39;apples&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-<span class="nx">translation</span> <span class="o">===</span> <span class="s1">&#39;apples&#39;</span> <span class="c1">// true</span>
+<span class="nx">translation</span> <span class="o">===</span> <span class="s1">&#39;apples&#39;</span> <span class="c1">// true &amp; plural</span>
 
 <span class="c1">// fr translation, french selected</span>
 <span class="kd">var</span> <span class="nx">i18n</span> <span class="o">=</span> <span class="k">new</span> <span class="nx">Jed</span><span class="p">(</span><span class="nx">myFrenchCatalog</span><span class="p">);</span>
 <span class="kd">var</span> <span class="nx">translation</span> <span class="o">=</span> <span class="nx">i18n</span><span class="p">.</span><span class="nx">ngettext</span><span class="p">(</span><span class="s1">&#39;apple&#39;</span><span class="p">,</span> <span class="s1">&#39;apples&#39;</span><span class="p">,</span> <span class="mi">0</span><span class="p">);</span>
-<span class="nx">translation</span> <span class="o">===</span> <span class="s1">&#39;pomme&#39;</span> <span class="c1">// true</span>
+<span class="nx">translation</span> <span class="o">===</span> <span class="s1">&#39;pomme&#39;</span> <span class="c1">// true &amp; singular</span>
 </pre></div>
 
 
 <p>You are now using pluralization!</p>
-<p>Ok, now you just have seen the right part of the schema above. You know how to start a gettext implementation and how to use the gettext API in your JavaScript application. (not all of it, but the necessary :p)</p>
+<p>Alright, you just have seen the right part of the schema above. You know how to start a gettext implementation and how to use the gettext API in your JavaScript application. (not all of it, but the essential :p)</p>
 <h3>Using a gettext extractor to create your dictionary</h3>
 <p>I will suppose you know how to use <a href="http://gruntjs.com">Grunt</a> inside your project. We will use the <a href="https://github.com/praekelt/jspot">jspot</a> gettext extractor with <a href="https://github.com/JSteunou/grunt-jspot">grunt-jspot</a>.</p>
 <p>If you are not using Grunt, jspot can also be used in JavaScript or command line.</p>
@@ -157,10 +159,7 @@
 
 <p>That's it. Your dictionary is ready. And yeah it's what we called a <strong>pot</strong> file. Please do not edit it manually. Like never! Its format is very important.</p>
 <h3>Generate catalogs and keeping them updated</h3>
-<p>You had seen how Jed exposes the gettext API and uses catalogs. You had seen how jspot creates the dictionary <em>pot</em> file. One more step.</p>
-<blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
-<p>How to generates catalogs?</p>
-</blockquote>
+<p>You had seen how Jed exposes the gettext API and uses catalogs. You had seen how jspot creates the dictionary <em>pot</em> file. One more step, how to generates catalogs:</p>
 <p>Two way, the easy way, or the... Nah. Both are easy, depending on what you are use to.</p>
 <p>If you remember, and read wikipedia, gettext is also known as GNU Gettext and comes with Linux. In fact, in most Linux distributions we have commands likes <code>msginit</code>, <code>msgmerge</code>, ... These are gettext commands. <code>msginit</code> is for creating a new catalog and <code>msgmerge</code> is for updating a catalog with all new entries from an updated dictionary.</p>
 <p>But I will told you about the graphical way, which allow me to show you how to translate too :)</p>
