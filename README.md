@@ -1,11 +1,11 @@
-This is the data for my personal website
+This is the source of my personal website
 =========================================
 
-It is automatically transformed by [Pelican](https://github.com/getpelican/pelican) into a static site whenever I push this repository to GitHub.
+It is automatically transformed by [Pelican](https://github.com/getpelican/pelican) into a static website whenever I push into this repository.
 
 License
 =======
 
-The contents are Copyright Jérôme Steunou. You may not reuse anything there in without my permission:
+The contents are Copyrighted Jérôme Steunou. You may not reuse anything there without my permission.
 
-The theme I use will be published soon as a MIT licenced Pelican theme.
+You can reuse my theme and my comment system: comimoc.
