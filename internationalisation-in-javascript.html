@@ -161,15 +161,15 @@
 <h3>Generate catalogs and keeping them updated</h3>
 <p>You had seen how Jed exposes the gettext API and uses catalogs. You had seen how jspot creates the dictionary <em>pot</em> file. One more step, how to generates catalogs:</p>
 <p>Two way, the easy way, or the... Nah. Both are easy, depending on what you are use to.</p>
-<p>If you remember, and read wikipedia, gettext is also known as GNU Gettext and comes with Linux. In fact, in most Linux distributions we have commands likes <code>msginit</code>, <code>msgmerge</code>, ... These are gettext commands. <code>msginit</code> is for creating a new catalog and <code>msgmerge</code> is for updating a catalog with all new entries from an updated dictionary.</p>
+<p>If you remember, and read wikipedia, gettext has a well known implementation as GNU Gettext which comes with Linux. In fact, in most Linux distributions we have commands likes <code>msginit</code>, <code>msgmerge</code>, ... These are gettext commands. <code>msginit</code> is for creating a new catalog and <code>msgmerge</code> is for updating a catalog with all new entries from an updated dictionary.</p>
 <p>But I will told you about the graphical way, which allow me to show you how to translate too :)</p>
 <p>The tool I'm using to create and manage my catalogs is <a href="http://poedit.net/">POEdit</a>. It's free, open source, and runs on different OS.</p>
 <p>Launch it, and go in file &gt; New from pot file (or a thing like that). Select your dictionary previously created and fill in some information. Do not miss to fill in the correct plural form for you catalog.</p>
-<p>// TODO insert image</p>
+<p><img alt="poeditinit" src="http://www.jeromesteunou.net/static/images/poedit_init.png" title="create a catalog from pot" /></p>
 <p>There is also a catalog manager, which help you to see your catalog per project, update all at once if the dictionary was updated and how you catalog status (green: translation = 100%).</p>
-<p>// TODO insert image</p>
+<p><img alt="poeditcatalog" src="http://www.jeromesteunou.net/static/images/poedit_catalog.png" title="catalog manager" /></p>
 <p>Selecting a catalog you can edit it and update translations. For a translations you can fill the singular and the plural form, without bothering about the <em>when</em> use plural, gettext will handle it for you.</p>
-<p>// TODO insert image</p>
+<p><img alt="poedittranslate" src="http://www.jeromesteunou.net/static/images/poedit_translate.png" title="using poedit to translate" /></p>
 <p>Now you know about creating and updating catalogs but also translate your application!</p>
 <blockquote><i class="icon-quote-left icon-3x pull-left icon-muted"></i>
 <p>Hey, one last thing, catalogs are .po or .mo files. Jed only read JSON!</p>
